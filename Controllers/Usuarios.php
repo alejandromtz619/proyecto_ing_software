@@ -56,7 +56,11 @@ class Usuarios extends Controller
         $clave = $_POST['clave'];
         $confirmar = $_POST['confirmar'];
         $caja = $_POST['caja'];
-
+        if (empty($usuario) || empty($nombre) || empty($clave) || empty($caja)){
+            $msg = 'Todos los campos son obligatorios';
+        } else if($clave != $confirmar){
+            $msg = 'Las contraseñas no coinciden';
+        }
 
     }
 }
