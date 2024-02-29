@@ -22,7 +22,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="my-modal-title">Nuevo Usuario</h5>
+                <h5 class="modal-title" id="title">Nuevo Usuario</h5>
                 <button class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -61,7 +61,7 @@
                             <?php } ?>
                         </select>
                     </div>
-                    <button class="btn btn-primary" type="button" onclick="registrarUser(event);">Registrar</button>
+                    <button class="btn btn-primary" type="button" onclick="registrarUser(event);" id="btnAccion">Registrar</button>
                 </form>
             </div>
         </div>

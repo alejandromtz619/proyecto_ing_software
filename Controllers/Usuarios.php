@@ -21,7 +21,7 @@ class Usuarios extends Controller
                 $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
             }
             $data[$i]['acciones'] = '<div>
-            <button class="btn btn-primary" type="button">Editar</button>
+            <button class="btn btn-primary" type="button" onclick= "btnEditarUser();">Editar</button>
             <button class="btn btn-danger" type="button">Eliminar</button>
             <div/>';
         }
@@ -60,7 +60,18 @@ class Usuarios extends Controller
             $msg = 'Todos los campos son obligatorios';
         } else if($clave != $confirmar){
             $msg = 'Las contraseñas no coinciden';
+        }else{
+            $data = $this->model->registrarUsuario($usuario, $nombre, $clave, $caja);
+            if ($data == "ok"){
+                $msg = "si";
+            }else if ($data ="existe"){
+                $msg = "El usuario ya existe";
+            }else{
+                $msg = "Error al registrar usuario";
+            }
         }
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        die();
 
     }
 }
