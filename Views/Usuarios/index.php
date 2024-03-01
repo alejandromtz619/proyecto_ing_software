@@ -31,6 +31,7 @@
                 <form method="post" id="frmUsuario">
                     <div class="form-group">
                         <label for="usuario">Usuario</label>
+                        <input type="hidden" id="id" name="id">
                         <input id="usuario" class="form-control" type="text" name="usuario" placeholder="Usuario">
                     </div>
                     
@@ -39,7 +40,7 @@
                         <input id="nombre" class="form-control" type="text" name="nombre" placeholder="Nombre del Usuario">
                     </div>
                     
-                    <div class="row">
+                    <div class="row" id="claves">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="clave">Contraseña</label>
