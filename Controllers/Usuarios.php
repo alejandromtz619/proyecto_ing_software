@@ -2,7 +2,8 @@
 
 class Usuarios extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         session_start();
         parent::__construct();
     }
@@ -14,15 +15,15 @@ class Usuarios extends Controller
     public function listar()
     {
         $data = $this->model->getUsuarios();
-        for ($i=0; $i < count($data); $i++) {
-            if ($data[$i]['estado'] == 1){
+        for ($i = 0; $i < count($data); $i++) {
+            if ($data[$i]['estado'] == 1) {
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
-            }else{
+            } else {
                 $data[$i]['estado'] = '<span class="badge badge-danger">Inactivo</span>';
             }
             $data[$i]['acciones'] = '<div>
-            <button class="btn btn-primary" type="button" onclick= "btnEditarUser('.$data[$i]['id'].');">Editar</button>
-            <button class="btn btn-danger" type="button">Eliminar</button>
+            <button class="btn btn-primary" type="button" onclick= "btnEditarUser(' . $data[$i]['id'] . ');">Editar</button>
+            <button class="btn btn-danger" type="button" onclick="btnEliminarUser(' . $data[$i]['id'] . ');">Eliminar</button>
             <div/>';
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
@@ -32,16 +33,16 @@ class Usuarios extends Controller
     {
         if (empty($_POST['usuario']) || empty($_POST['clave'])) {
             $msg = "Los campos están vacíos";
-        }else{
+        } else {
             $usuario = $_POST['usuario'];
             $clave = $_POST['clave'];
             $data = $this->model->getUsuario($usuario, $clave);
-            if ($data){
+            if ($data) {
                 $_SESSION['id_usuario'] = $data['id'];
                 $_SESSION['usuario'] = $data['usuario'];
                 $_SESSION['nombre'] = $data['nombre'];
                 $msg = "ok";
-            }else {
+            } else {
                 $msg = "Usuario o contraseña incorrecta";
             }
         }
@@ -58,36 +59,33 @@ class Usuarios extends Controller
         $caja = $_POST['caja'];
         $id = $_POST['id'];
         $hash = hash("SHA256", $clave);
-        if (empty($usuario) || empty($nombre) || empty($caja)){
+        if (empty($usuario) || empty($nombre) || empty($caja)) {
             $msg = 'Todos los campos son obligatorios';
-        }else{
-            if($id == ""){
-                if($clave != $confirmar){
+        } else {
+            if ($id == "") {
+                if ($clave != $confirmar) {
                     $msg = "Las contraseñas no coinciden";
-                }else{
+                } else {
                     $data = $this->model->registrarUsuario($usuario, $nombre, $hash, $caja);
-                    if ($data == "ok"){
+                    if ($data == "ok") {
                         $msg = "si";
-                    }else if ($data ="existe"){
+                    } else if ($data = "existe") {
                         $msg = "El usuario ya existe";
-                    }else{
+                    } else {
                         $msg = "Error al registrar usuario";
                     }
-
                 }
-            } else{
+            } else {
                 $data = $this->model->modificarUsuario($usuario, $nombre, $caja, $id);
-                if ($data == "modificado"){
+                if ($data == "modificado") {
                     $msg = "modificado";
-                } else{
+                } else {
                     $msg = "Error al modificar usuario";
                 }
-
             }
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
-
     }
     public function editar(int $id)
     {
@@ -96,5 +94,3 @@ class Usuarios extends Controller
         die();
     }
 }
-
-?>
