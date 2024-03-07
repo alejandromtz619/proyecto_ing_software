@@ -164,15 +164,15 @@ function btnEliminarUser(id) {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
           if (res == "ok") {
-            Swal.fire("Mensaje!", "Usuario eliminado con exito.", "success");
+            Swal.fire("Mensaje!", "Usuario eliminado con exito.", "success")
             tblUsuarios.ajax.reload();
           } else {
-            Swal.fire("Mensaje!", res, "error");
+            Swal.fire("Mensaje!", res, "error")
           }
         }
-      };
+      }
     }
-  });
+  })
 }
 
 function btnReingresarUser(id) {
@@ -194,13 +194,13 @@ function btnReingresarUser(id) {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
           if (res == "ok") {
-            Swal.fire("Mensaje!", "Usuario reingresado con exito.", "success");
+            Swal.fire("Mensaje!", "Usuario reingresado con exito.", "success")
             tblUsuarios.ajax.reload();
           } else {
-            Swal.fire("Mensaje!", res, "error");
+            Swal.fire("Mensaje!", res, "error")
           }
         }
-      };
+      }
     }
-  });
+  })
 }
