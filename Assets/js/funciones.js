@@ -1,4 +1,4 @@
-let tblUsuarios, tblClientes;
+let tblUsuarios, tblClientes, tblCategorias, tblMedidas;
 document.addEventListener("DOMContentLoaded", function () {
   tblUsuarios = $("#tblUsuarios").DataTable({
     ajax: {
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
       {
         data: "acciones"
       }
-    ],
+    ]
   });
   //Fin de la tabla usuarios
   tblClientes = $("#tblClientes").DataTable({
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
       {
         data: "acciones"
       }
-    ],
+    ]
   });
   //Fin de la tabla Categorias
   tblMedidas = $("#tblMedidas").DataTable({
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
       {
         data: "acciones"
       }
-    ],
+    ]
   });
 })
 
