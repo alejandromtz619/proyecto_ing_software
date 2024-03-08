@@ -36,17 +36,32 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tools"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-tools" color="white"></i></div>
                             Configuracion
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="<?php echo base_url; ?>Usuarios"><i class="fas fa-user mr-2"></i>Usuarios</a>
-                                <a class="nav-link" href="layout-sidenav-light.html"><i class="fas fa-box mr-2"></i>Cajas</a>
+                                <a class="nav-link" href="layout-sidenav-light.html"><i class="fas fa-box mr-2" color="brown"></i>Cajas</a>
                             </nav>
                         </div>
-
+                        <a class="nav-link" href="<?php echo base_url; ?>Clientes">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users" color="blue"></i></div>
+                            Clientes
+                        </a>
+                        <a class="nav-link" href="<?php echo base_url; ?>Categorias">
+                            <div class="sb-nav-link-icon"><i class="fas fa-bookmark" color="yellow"></i></div>
+                            Categorias
+                        </a>
+                        <a class="nav-link" href="<?php echo base_url; ?>Medidas">
+                            <div class="sb-nav-link-icon"><i class="fas fa-smoking" color="red"></i></div>
+                            Medidas
+                        </a>
+                        <a class="nav-link" href="<?php echo base_url; ?>Productos">
+                            <div class="sb-nav-link-icon"><i class="fas fa-shopping-bag" color="green"></i></div>
+                            Productos
+                        </a>
                     </div>
                 </div>
 
