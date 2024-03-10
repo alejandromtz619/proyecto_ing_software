@@ -1,4 +1,4 @@
-let tblUsuarios, tblClientes, tblCategorias, tblMedidas, tblProductos;
+let tblUsuarios, tblClientes, tblCajas, tblCategorias, tblMedidas, tblProductos;
 document.addEventListener("DOMContentLoaded", function () {
   tblUsuarios = $("#tblUsuarios").DataTable({
     ajax: {
@@ -122,6 +122,27 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "cantidad",
+      },
+      {
+        data: "estado",
+      },
+      {
+        data: "acciones",
+      },
+    ],
+  });
+  // Fin de la tabla productos
+  tblCajas = $("#tblCajas").DataTable({
+    ajax: {
+      url: base_url + "Cajas/listar",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "id",
+      },
+      {
+        data: "caja",
       },
       {
         data: "estado",
@@ -868,6 +889,150 @@ function btnReingresarPro(id) {
           if (res == "ok") {
             Swal.fire("Mensaje!", "Producto reingresado con exito.", "success");
             tblProductos.ajax.reload();
+          } else {
+            Swal.fire("Mensaje!", res, "error");
+          }
+        }
+      };
+    }
+  });
+}
+
+//Fin Productos
+function frmCaja() {
+  document.getElementById("title").innerHTML = "Nueva Caja";
+  document.getElementById("btnAccion").innerHTML = "Registrar";
+  document.getElementById("frmCaja").reset();
+  $("#nuevo_caja").modal("show");
+  document.getElementById("id").value = "";
+}
+function registrarCaja(e) {
+  e.preventDefault();
+  const caja = document.getElementById("caja");
+  if (caja.value == "") {
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: "Todos los campos son obligatorios",
+      showConfirmButton: false,
+      timer: 3000,
+    });
+  } else {
+    const url = base_url + "Cajas/registrar";
+    const frm = document.getElementById("frmCaja");
+    const http = new XMLHttpRequest();
+    http.open("POST", url, true);
+    http.send(new FormData(frm));
+    http.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.responseText);
+        if (res == "si") {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Caja registrada con éxito",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          frm.reset();
+          $("#nuevo_caja").modal("hide");
+          tblCajas.ajax.reload();
+        } else if (res == "modificado") {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Caja modificada correctamente",
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          $("#nuevo_caja").modal("hide");
+          tblCajas.ajax.reload();
+        } else {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: res,
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        }
+      }
+    };
+  }
+}
+
+function btnEditarCaja(id) {
+  document.getElementById("title").innerHTML = "Actualizar Caja";
+  document.getElementById("btnAccion").innerHTML = "Modificar";
+  const url = base_url + "Cajas/editar/" + id;
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      document.getElementById("id").value = res.id;
+      document.getElementById("caja").value = res.caja;
+      $("#nuevo_caja").modal("show");
+    }
+  };
+}
+function btnEliminarCaja(id) {
+  Swal.fire({
+    title: "Estas seguro de eliminar?",
+    text: "La caja no se eliminara de forma permantente, solo cambiara el estado a inactivo!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si!",
+    cancelButtonText: "No",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const url = base_url + "Cajas/eliminar/" + id;
+      const http = new XMLHttpRequest();
+      http.open("GET", url, true);
+      http.send();
+      http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          const res = JSON.parse(this.responseText);
+          if (res == "ok") {
+            Swal.fire("Mensaje!", "Caja eliminada con exito.", "success");
+            tblCajas.ajax.reload();
+          } else {
+            Swal.fire("Mensaje!", res, "error");
+          }
+        }
+      };
+    }
+  });
+}
+
+function btnReingresarCaja(id) {
+  Swal.fire({
+    title: "Estas seguro de reingresar?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si!",
+    cancelButtonText: "No",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const url = base_url + "Cajas/reingresar/" + id;
+      const http = new XMLHttpRequest();
+      http.open("GET", url, true);
+      http.send();
+      http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          const res = JSON.parse(this.responseText);
+          if (res == "ok") {
+            Swal.fire(
+              "Mensaje!",
+              "Caja reingresada con exito.",
+              "success"
+            );
+            tblCajas.ajax.reload();
           } else {
             Swal.fire("Mensaje!", res, "error");
           }
