@@ -31,7 +31,8 @@
 
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input id="nombre" class="form-control" type="text" name="nombre" placeholder="Nombre">
+                        <input type="hidden" id="id" name="id">
+                        <input id="nombre" class="form-control" type="text" name="nombre" placeholder="Nombre de la categoria">
                     </div>
                     <div class="form-group">
                         <label for="nombre_corto">Nombre Corto</label>

@@ -52,7 +52,7 @@ class Cajas extends Controller
                         $msg = "Error al registrar caja";
                     }
             } else {
-                $data = $this->model->modificarCaja($caja);
+                $data = $this->model->modificarCaja($caja, $id);
                 if ($data == "modificado") {
                     $msg = "modificado";
                 } else {

@@ -30,7 +30,8 @@
                 
                     <div class="form-group">
                         <label for="caja">Caja</label>
-                        <input id="caja" class="form-control" type="text" name="caja" placeholder="Nombre de la Caja">
+                        <input type="hidden" id="id" name="id">
+                        <input id="caja" class="form-control" type="text" name="caja" placeholder="Nombre de la caja">
                     </div>
 
                     <button class="btn btn-primary" type="button" onclick="registrarCaja(event);" id="btnAccion">Registrar</button>

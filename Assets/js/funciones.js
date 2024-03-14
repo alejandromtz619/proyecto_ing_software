@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
-      },
+      }
     ],
   });
   //Fin de la tabla usuarios
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
-      },
+      }
     ],
   });
   //Fin de la tabla Clientes
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
-      },
+      }
     ],
   });
   //Fin de la tabla Categorias
@@ -128,8 +128,8 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
-      },
-    ],
+      }
+    ]
   });
   // Fin de la tabla productos
   tblCajas = $("#tblCajas").DataTable({
@@ -220,7 +220,6 @@ function registrarUser(e) {
     };
   }
 }
-
 function btnEditarUser(id) {
   document.getElementById("title").innerHTML = "Actualizar Usuario";
   document.getElementById("btnAccion").innerHTML = "Modificar";
@@ -270,7 +269,6 @@ function btnEliminarUser(id) {
     }
   });
 }
-
 function btnReingresarUser(id) {
   Swal.fire({
     title: "Estas seguro de reingresar?",
@@ -389,7 +387,7 @@ function btnEditarCli(id) {
       document.getElementById("direccion").value = res.direccion;
       $("#nuevo_cliente").modal("show");
     }
-  };
+  }
 }
 function btnEliminarCli(id) {
   Swal.fire({
@@ -470,7 +468,7 @@ function registrarCat(e) {
       title: "Todos los campos son obligatorios",
       showConfirmButton: false,
       timer: 3000,
-    });
+    })
   } else {
     const url = base_url + "Categorias/registrar";
     const frm = document.getElementById("frmCategoria");
@@ -487,7 +485,7 @@ function registrarCat(e) {
             title: "Categoria registrada con éxito",
             showConfirmButton: false,
             timer: 3000,
-          });
+          })
           frm.reset();
           $("#nuevo_categoria").modal("hide");
           tblCategorias.ajax.reload();
@@ -498,7 +496,7 @@ function registrarCat(e) {
             title: "Categoria modificada correctamente",
             showConfirmButton: false,
             timer: 3000,
-          });
+          })
           $("#nuevo_categoria").modal("hide");
           tblCategorias.ajax.reload();
         } else {
@@ -508,10 +506,10 @@ function registrarCat(e) {
             title: res,
             showConfirmButton: false,
             timer: 3000,
-          });
+          })
         }
       }
-    };
+    }
   }
 }
 
@@ -529,7 +527,7 @@ function btnEditarCat(id) {
       document.getElementById("nombre").value = res.nombre;
       $("#nuevo_categoria").modal("show");
     }
-  };
+  }
 }
 function btnEliminarCat(id) {
   Swal.fire({
@@ -557,9 +555,9 @@ function btnEliminarCat(id) {
             Swal.fire("Mensaje!", res, "error");
           }
         }
-      };
+      }
     }
-  });
+  })
 }
 
 function btnReingresarCat(id) {
@@ -591,9 +589,9 @@ function btnReingresarCat(id) {
             Swal.fire("Mensaje!", res, "error");
           }
         }
-      };
+      }
     }
-  });
+  })
 }
 
 //Fin Categorias
@@ -653,10 +651,10 @@ function registrarMed(e) {
             title: res,
             showConfirmButton: false,
             timer: 3000,
-          });
+          })
         }
       }
-    };
+    }
   }
 }
 
@@ -675,7 +673,7 @@ function btnEditarMed(id) {
       document.getElementById("nombre_corto").value = res.nombre_corto;
       $("#nuevo_medida").modal("show");
     }
-  };
+  }
 }
 function btnEliminarMed(id) {
   Swal.fire({
@@ -750,20 +748,13 @@ function frmProducto() {
 function registrarPro(e) {
   e.preventDefault();
   const codigo = document.getElementById("codigo");
-  const nombre = document.getElementById("nombre");
+  const descripcion = document.getElementById("descripcion");
   const precio_compra = document.getElementById("precio_compra");
   const precio_venta = document.getElementById("precio_venta");
   const id_medida = document.getElementById("medida");
   const id_cat = document.getElementById("categoria");
 
-  if (
-    codigo.value == "" ||
-    nombre.value == "" ||
-    precio_compra.value == "" ||
-    precio_venta.value == "" ||
-    id_medida.value == "" ||
-    id_cat.value == ""
-  ) {
+  if (codigo.value == "" || descripcion.value == "" || precio_compra.value == "" || precio_venta.value == "" ||  id_medida.value == "" ||  id_cat.value == "" ) {
     Swal.fire({
       position: "top-end",
       icon: "error",
@@ -827,12 +818,11 @@ function btnEditarPro(id) {
       const res = JSON.parse(this.responseText);
       document.getElementById("id").value = res.id;
       document.getElementById("codigo").value = res.codigo;
-      document.getElementById("nombre").value = res.descripcion;
+      document.getElementById("descripcion").value = res.descripcion;
       document.getElementById("precio_compra").value = res.precio_compra;
       document.getElementById("precio_venta").value = res.precio_venta;
       document.getElementById("medida").value = res.id_medida;
       document.getElementById("categoria").value = res.id_categoria;
-
       $("#nuevo_producto").modal("show");
     }
   };
@@ -887,15 +877,15 @@ function btnReingresarPro(id) {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
           if (res == "ok") {
-            Swal.fire("Mensaje!", "Producto reingresado con exito.", "success");
+            Swal.fire('Mensaje!', 'Producto reingresado con exito.', 'success')
             tblProductos.ajax.reload();
           } else {
-            Swal.fire("Mensaje!", res, "error");
+            Swal.fire("Mensaje!", res, "error")
           }
         }
-      };
+      }
     }
-  });
+  })
 }
 
 //Fin Productos
@@ -915,8 +905,8 @@ function registrarCaja(e) {
       icon: "error",
       title: "Todos los campos son obligatorios",
       showConfirmButton: false,
-      timer: 3000,
-    });
+      timer: 3000
+    })
   } else {
     const url = base_url + "Cajas/registrar";
     const frm = document.getElementById("frmCaja");

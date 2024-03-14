@@ -52,7 +52,7 @@ class Categorias extends Controller
                         $msg = "Error al registrar categoria";
                     }
             } else {
-                $data = $this->model->modificarCategoria($nombre);
+                $data = $this->model->modificarCategoria($nombre, $id);
                 if ($data == "modificado") {
                     $msg = "modificado";
                 } else {

@@ -27,10 +27,11 @@
             </div>
             <div class="modal-body">
                 <form method="post" id="frmCategoria">
-                
+
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
-                        <input id="nombre" class="form-control" type="text" name="nombre" placeholder="Nombre de la Categoria">
+                        <input type="hidden" id="id" name="id">
+                        <input id="nombre" class="form-control" type="text" name="nombre" placeholder="Nombre de la categoria">
                     </div>
 
                     <button class="btn btn-primary" type="button" onclick="registrarCat(event);" id="btnAccion">Registrar</button>

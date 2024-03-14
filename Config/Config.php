@@ -5,3 +5,5 @@ const user = "root";
 const pass = "mysql";
 const db = "sistema";
 const charset = "utf-8";
+
+?>

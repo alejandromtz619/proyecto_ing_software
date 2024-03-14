@@ -19,7 +19,7 @@ class CategoriasModel extends Query
         $verificar = "SELECT * FROM categorias WHERE nombre = '$this->nombre'";
         $existe = $this->select($verificar);
         if (empty($existe)){
-            $sql = "INSERT INTO categorias(nombre) VALUES (?)";
+            $sql = "INSERT INTO categorias (nombre) VALUES (?)";
             $datos = array($this->nombre);
             $data = $this->save($sql, $datos);
             if ($data == 1) {

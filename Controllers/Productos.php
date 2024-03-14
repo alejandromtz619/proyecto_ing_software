@@ -43,18 +43,18 @@ class Productos extends Controller
     {
 
         $codigo = $_POST['codigo'];
-        $nombre = $_POST['nombre'];
+        $descripcion = $_POST['descripcion'];
         $precio_compra = $_POST['precio_compra'];
         $precio_venta = $_POST['precio_venta'];
         $medida = $_POST['medida'];
         $categoria = $_POST['categoria'];
         $id = $_POST['id'];
 
-        if (empty($codigo) || empty($nombre) || empty($precio_compra) || empty($precio_venta) || empty($medida) || empty($categoria)) {
+        if (empty($codigo) || empty($descripcion) || empty($precio_compra) || empty($precio_venta) || empty($medida) || empty($categoria)) {
             $msg = 'Todos los campos son obligatorios';
         } else {
             if ($id == "") {
-                $data = $this->model->registrarProducto($codigo, $nombre, $precio_compra, $precio_venta, $medida, $categoria);
+                $data = $this->model->registrarProducto($codigo, $descripcion, $precio_compra, $precio_venta, $medida, $categoria);
                 if ($data == "ok") {
                     $msg = "si";
                 } else if ($data = "existe") {
@@ -63,7 +63,7 @@ class Productos extends Controller
                     $msg = "Error al registrar Producto";
                 }
             } else {
-                $data = $this->model->modificarProducto($codigo, $nombre, $precio_compra, $precio_venta, $medida, $categoria);
+                $data = $this->model->modificarProducto($codigo, $descripcion, $precio_compra, $precio_venta, $medida, $categoria, $id);
                 if ($data == "modificado") {
                     $msg = "modificado";
                 } else {
@@ -95,7 +95,7 @@ class Productos extends Controller
 
     public function reingresar(int $id)
     {
-        $data = $this->model->accionUser(1, $id);
+        $data = $this->model->accionPro(1, $id);
         if ($data == 1) {
             $msg = "ok";
         } else {
