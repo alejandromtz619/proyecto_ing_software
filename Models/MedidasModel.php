@@ -59,7 +59,7 @@ class MedidasModel extends Query
         return $data;
     }
 
-    public function accionCli(int $estado, int $id)
+    public function accionMed(int $estado, int $id)
     {
         $this->id=$id;
         $this->estado = $estado;
