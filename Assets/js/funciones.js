@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
-      }
+      },
     ],
   });
   //Fin de la tabla usuarios
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
-      }
+      },
     ],
   });
   //Fin de la tabla Clientes
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
-      }
+      },
     ],
   });
   //Fin de la tabla Categorias
@@ -131,8 +131,8 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
-      }
-    ]
+      },
+    ],
   });
   // Fin de la tabla productos
   tblCajas = $("#tblCajas").DataTable({
@@ -390,7 +390,7 @@ function btnEditarCli(id) {
       document.getElementById("direccion").value = res.direccion;
       $("#nuevo_cliente").modal("show");
     }
-  }
+  };
 }
 function btnEliminarCli(id) {
   Swal.fire({
@@ -471,7 +471,7 @@ function registrarCat(e) {
       title: "Todos los campos son obligatorios",
       showConfirmButton: false,
       timer: 3000,
-    })
+    });
   } else {
     const url = base_url + "Categorias/registrar";
     const frm = document.getElementById("frmCategoria");
@@ -488,7 +488,7 @@ function registrarCat(e) {
             title: "Categoria registrada con éxito",
             showConfirmButton: false,
             timer: 3000,
-          })
+          });
           frm.reset();
           $("#nuevo_categoria").modal("hide");
           tblCategorias.ajax.reload();
@@ -499,7 +499,7 @@ function registrarCat(e) {
             title: "Categoria modificada correctamente",
             showConfirmButton: false,
             timer: 3000,
-          })
+          });
           $("#nuevo_categoria").modal("hide");
           tblCategorias.ajax.reload();
         } else {
@@ -509,10 +509,10 @@ function registrarCat(e) {
             title: res,
             showConfirmButton: false,
             timer: 3000,
-          })
+          });
         }
       }
-    }
+    };
   }
 }
 
@@ -530,7 +530,7 @@ function btnEditarCat(id) {
       document.getElementById("nombre").value = res.nombre;
       $("#nuevo_categoria").modal("show");
     }
-  }
+  };
 }
 function btnEliminarCat(id) {
   Swal.fire({
@@ -558,9 +558,9 @@ function btnEliminarCat(id) {
             Swal.fire("Mensaje!", res, "error");
           }
         }
-      }
+      };
     }
-  })
+  });
 }
 
 function btnReingresarCat(id) {
@@ -592,9 +592,9 @@ function btnReingresarCat(id) {
             Swal.fire("Mensaje!", res, "error");
           }
         }
-      }
+      };
     }
-  })
+  });
 }
 
 //Fin Categorias
@@ -654,10 +654,10 @@ function registrarMed(e) {
             title: res,
             showConfirmButton: false,
             timer: 3000,
-          })
+          });
         }
       }
-    }
+    };
   }
 }
 
@@ -676,7 +676,7 @@ function btnEditarMed(id) {
       document.getElementById("nombre_corto").value = res.nombre_corto;
       $("#nuevo_medida").modal("show");
     }
-  }
+  };
 }
 function btnEliminarMed(id) {
   Swal.fire({
@@ -757,8 +757,8 @@ function registrarCaja(e) {
       icon: "error",
       title: "Todos los campos son obligatorios",
       showConfirmButton: false,
-      timer: 3000
-    })
+      timer: 3000,
+    });
   } else {
     const url = base_url + "Cajas/registrar";
     const frm = document.getElementById("frmCaja");
@@ -869,11 +869,7 @@ function btnReingresarCaja(id) {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
           if (res == "ok") {
-            Swal.fire(
-              "Mensaje!",
-              "Caja reingresada con exito.",
-              "success"
-            );
+            Swal.fire("Mensaje!", "Caja reingresada con exito.", "success");
             tblCajas.ajax.reload();
           } else {
             Swal.fire("Mensaje!", res, "error");
@@ -883,7 +879,6 @@ function btnReingresarCaja(id) {
     }
   });
 }
-
 
 //Fin Cajas
 
@@ -904,7 +899,14 @@ function registrarPro(e) {
   const id_medida = document.getElementById("medida");
   const id_cat = document.getElementById("categoria");
 
-  if (codigo.value == "" || descripcion.value == "" || precio_compra.value == "" || precio_venta.value == "" ||  id_medida.value == "" ||  id_cat.value == "" ) {
+  if (
+    codigo.value == "" ||
+    descripcion.value == "" ||
+    precio_compra.value == "" ||
+    precio_venta.value == "" ||
+    id_medida.value == "" ||
+    id_cat.value == ""
+  ) {
     Swal.fire({
       position: "top-end",
       icon: "error",
@@ -973,12 +975,14 @@ function btnEditarPro(id) {
       document.getElementById("precio_venta").value = res.precio_venta;
       document.getElementById("medida").value = res.id_medida;
       document.getElementById("categoria").value = res.id_categoria;
-      document.getElementById("img-preview").src = base_url + 'Assets/img/'+ res.foto;
-      document.getElementById("icon-cerrar").innerHTML = 
-      `<button class="btn btn-danger" onclick="deleteImg();"><i class="fas fa-times"></i></button>`;
+      document.getElementById("img-preview").src =
+        base_url + "Assets/img/" + res.foto;
+      document.getElementById(
+        "icon-cerrar"
+      ).innerHTML = `<button class="btn btn-danger" onclick="deleteImg();"><i class="fas fa-times"></i></button>`;
       document.getElementById("icon-image").classList.add("d-none");
-      document.getElementById("foto_actual").value= res.foto;
-      document.getElementById("foto_delete").value= res.foto;
+      document.getElementById("foto_actual").value = res.foto;
+
       $("#nuevo_producto").modal("show");
     }
   };
@@ -1033,35 +1037,71 @@ function btnReingresarPro(id) {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
           if (res == "ok") {
-            Swal.fire('Mensaje!', 'Producto reingresado con exito.', 'success')
+            Swal.fire("Mensaje!", "Producto reingresado con exito.", "success");
             tblProductos.ajax.reload();
           } else {
-            Swal.fire("Mensaje!", res, "error")
+            Swal.fire("Mensaje!", res, "error");
           }
         }
-      }
+      };
     }
-  })
+  });
 }
 
-function preview(e){
+function preview(e) {
   const url = e.target.files[0];
   const urlTmp = URL.createObjectURL(url);
   document.getElementById("img-preview").src = urlTmp;
   document.getElementById("icon-image").classList.add("d-none");
-  document.getElementById("icon-cerrar").innerHTML = 
-  `<button class="btn btn-danger" onclick="deleteImg();"><i class="fas fa-times"></i></button>
-  ${url['name']}`;
+  document.getElementById(
+    "icon-cerrar"
+  ).innerHTML = `<button class="btn btn-danger" onclick="deleteImg();"><i class="fas fa-times"></i></button>
+  ${url["name"]}`;
 }
 
-function deleteImg(){
-  document.getElementById("icon-cerrar").innerHTML = '';
+function deleteImg() {
+  document.getElementById("icon-cerrar").innerHTML = "";
   document.getElementById("icon-image").classList.remove("d-none");
-  document.getElementById("img-preview").src = '';
-  document.getElementById("imagen").value = '';
-  document.getElementById("foto_delete").value = '';
-
+  document.getElementById("img-preview").src = "";
+  document.getElementById("imagen").value = "";
+  document.getElementById("foto_actual").value = "";
+}
+function buscarCodigo(e) {
+  e.preventDefault();
+  if (e.which == 13) {
+    const cod = document.getElementById("codigo").value;
+    const url = base_url + "Compras/buscarCodigo/" + cod;
+    const http = new XMLHttpRequest();
+    http.open("GET", url, true);
+    http.send();
+    http.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.responseText);
+        if (res) {
+          document.getElementById("nombre").value = res.descripcion;
+          document.getElementById("precio").value = res.precio_compra;
+          document.getElementById("id").value = res.id;
+          document.getElementById("cantidad").focus();
+        } else {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "El producto no existe",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          document.getElementById("codigo").value = "";
+          document.getElementById("codigo").focus();
+        }
+      }
+    };
+  }
+}
+function calcularPrecio(e) {
+  e.preventDefault();
+  const cant = document.getElementById("cantidad").value;
+  const precio = document.getElementById("precio").value;
+  document.getElementById("sub_total").value = precio * cant;
 }
 
 //Fin Productos
-

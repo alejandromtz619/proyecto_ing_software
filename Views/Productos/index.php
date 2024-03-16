@@ -81,19 +81,18 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Foto</label>
-                            <div class="card border-primary">
-                                <div class="card-body">
-                                    <label for="imagen" id="icon-image" class="btn btn-primary"><i class="fas fa-image"></i></label>
-                                    <span id="icon-cerrar"></span>
-                                    <input id="imagen" class="d-none" type="file" name="imagen" onchange="preview(event);">
-                                    <input type="hidden" id="foto_actual" name= "foto_actual">
-                                    <input type="hidden" id="foto_delete" name= "foto_delete">
-                                    <img class="img-thumbnail" id="img-preview">
+                            <div class="form-group">
+                                <label>Foto</label>
+                                <div class="card border-primary">
+                                    <div class="card-body">
+                                        <label for="imagen" id="icon-image" class="btn btn-primary"><i class="fas fa-image"></i></label>
+                                        <span id="icon-cerrar"></span>
+                                        <input id="imagen" class="d-none" type="file" name="imagen" onchange="preview(event);">
+                                        <input type="hidden" id="foto_actual" name="foto_actual">
+                                        <img class="img-thumbnail" id="img-preview">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                     <button class="btn btn-primary" type="button" onclick="registrarPro(event);" id="btnAccion">Registrar</button>
