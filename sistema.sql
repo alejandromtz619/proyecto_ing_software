@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-03-2024 a las 03:57:10
+-- Tiempo de generación: 22-03-2024 a las 03:19:44
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -91,7 +91,35 @@ CREATE TABLE `clientes` (
 
 INSERT INTO `clientes` (`id`, `ci`, `nombre`, `telefono`, `direccion`, `estado`) VALUES
 (1, '12365', 'angel sifuentes', '}7645656', 'lima peru', 1),
-(2, '4657785', 'pumba', '47867', 'ddfsdgsd', 1);
+(2, '4657785', 'pumba', '47867', 'ddfsdgsd', 1),
+(3, '5244360', 'alejandro', '651981', 'km9 acaray', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle`
+--
+
+CREATE TABLE `detalle` (
+  `id` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `precio` decimal(10,2) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `sub_total` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalle`
+--
+
+INSERT INTO `detalle` (`id`, `id_producto`, `id_usuario`, `precio`, `cantidad`, `sub_total`) VALUES
+(1, 4, 1, 123.00, 8, 984.00),
+(2, 4, 1, 123.00, 80, 9840.00),
+(3, 4, 1, 123.00, 80, 9840.00),
+(5, 4, 1, 123.00, 42, 5166.00),
+(6, 4, 1, 123.00, 80, 9840.00),
+(9, 4, 1, 123.00, 40, 4920.00);
 
 -- --------------------------------------------------------
 
@@ -140,9 +168,10 @@ CREATE TABLE `productos` (
 INSERT INTO `productos` (`id`, `codigo`, `descripcion`, `precio_compra`, `precio_venta`, `cantidad`, `id_medida`, `id_categoria`, `foto`, `estado`) VALUES
 (1, '0w983ehf', 'pilsen\'i', 1000.00, 1200.00, 50, 1, 6, 'default.png', 1),
 (2, '0w983ehfg', 'pilsenaso', 1000.00, 1200.00, 0, 1, 2, 'pilsen.jpg', 1),
-(3, 'dnfvvj67', 'brahmita', 22.00, 235.00, 0, 2, 1, 'brahma.png', 1),
+(3, 'dnfvvj67', 'brahmita', 22.00, 235.00, 0, 2, 1, '20240316160311.jpg', 1),
 (4, '4555', 'tydiu', 123.00, 32154.00, 0, 1, 1, 'default.png', 1),
-(5, '34t', 'sdf', 34.00, 54.00, 0, 2, 2, 'default.png', 1);
+(5, '34t', 'sdf', 34.00, 54.00, 0, 2, 2, 'default.png', 1),
+(6, 'bdty9wuh98', 'pilsen', 100000.00, 1450000.00, 0, 1, 1, '20240316160344.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -165,7 +194,7 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `usuario`, `nombre`, `clave`, `id_caja`, `estado`) VALUES
 (1, 'admin', 'Alejandro Martinez', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 2, 1),
-(2, 'toto', 'Rodolfo', '31f7a65e315586ac198bd798b6629ce4903d0899476d5741a9f32e2e521b6a66', 3, 1);
+(2, 'toto', 'Rodolfo avalos', '31f7a65e315586ac198bd798b6629ce4903d0899476d5741a9f32e2e521b6a66', 2, 1);
 
 --
 -- Índices para tablas volcadas
@@ -187,6 +216,12 @@ ALTER TABLE `categorias`
 -- Indices de la tabla `clientes`
 --
 ALTER TABLE `clientes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `detalle`
+--
+ALTER TABLE `detalle`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -230,7 +265,13 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle`
+--
+ALTER TABLE `detalle`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `medidas`
@@ -242,7 +283,7 @@ ALTER TABLE `medidas`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
