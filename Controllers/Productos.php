@@ -80,7 +80,7 @@ class Productos extends Controller
                 }
             } else {
                 $imgDelete = $this->model->editarPro($id);
-                if ($imgDelete['foto'] != 'default.png' || $imgDelete['foto'] = !"") {
+                if ($imgDelete['foto'] != 'default.png') {
                     if (file_exists("Assets/img/"  . $imgDelete['foto'])) {
                         unlink("Assets/img/" . $imgDelete['foto']);
                     }

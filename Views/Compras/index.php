@@ -1,14 +1,14 @@
 <?php include "Views/Templates/header.php"; ?>
-<ol class="breadcrumb mb-4">
-    <li class="breadcrumb-item active">Nueva Compra</li>
-</ol>
 <div class="card">
+<div class= "card-header bg-primary text-white">
+<h4>Nueva Compra</h4>
+</div>
     <div class="card-body">
         <form id="frmCompra">
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="codigo">Codigo de Barras</label>
+                        <label for="codigo"><i class="fas fa-barcode"></i> Codigo de Barras</label>
                         <input type="hidden" id="id" name="id">
                         <input id="codigo" class="form-control" type="text" name="codigo" placeholder="Codigo de Barras" onkeyup="buscarCodigo(event)">
                     </div>
@@ -42,11 +42,10 @@
         </form>
     </div>
 </div>
-<table class="table table-light">
+<table class="table table-light table-bordered table-hover">
     <thead class="thead-dark">
         <tr>
             <th>Id</th>
-            <th>Codigo</th>
             <th>Descripcion</th>
             <th>Cantidad</th>
             <th>Precio</th>
@@ -54,7 +53,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="tblDetalle">
 
     </tbody>
 </table>
@@ -62,7 +61,7 @@
     <div class="col-md-4 ml-auto">
         <div class="form-group">
             <label for="total" class="font-weight-bold">Total</label>
-            <input id=" total" class="form-control" type="number" name="total" placeholder="Total" disabled>
+            <input id="total" class="form-control" type="number" name="total" placeholder="Total" disabled>
             <button class="btn btn-primary mt-2 btn-block" type="button">Generar compra</button>
         </div>
     </div>
