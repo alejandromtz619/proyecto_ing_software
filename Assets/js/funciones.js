@@ -1113,11 +1113,28 @@ function calcularPrecio(e) {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
           if (res == "ok") {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Producto ingresado",
+              showConfirmButton: false,
+              timer: 3000,
+            });
+            frm.reset();
+            cargarDetalle();
+          } else if (res == "modificado") {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Producto actualizado",
+              showConfirmButton: false,
+              timer: 3000,
+            });
             frm.reset();
             cargarDetalle();
           }
         }
-      }
+      };
     }
   }
 }
@@ -1131,16 +1148,16 @@ function cargarDetalle() {
   http.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       const res = JSON.parse(this.responseText);
-      let html = '';
-      res.detalle.forEach(row => {
+      let html = "";
+      res.detalle.forEach((row) => {
         html += `<tr>
-        <td>${row['id']}</td>
-        <td>${row['descripcion']}</td>
-        <td>${row['cantidad']}</td>
-        <td>${row['precio']}</td>
-        <td>${row['sub_total']}</td>
+        <td>${row["id"]}</td>
+        <td>${row["descripcion"]}</td>
+        <td>${row["cantidad"]}</td>
+        <td>${row["precio"]}</td>
+        <td>${row["sub_total"]}</td>
         <td>
-        <button class="btn btn-danger" type="button" onclick="deleteDetalle(${row['id']})">
+        <button class="btn btn-danger" type="button" onclick="deleteDetalle(${row["id"]})">
         <i class="fas fa-trash-alt"></i></button>
         </td>
         </tr>`;
@@ -1148,11 +1165,10 @@ function cargarDetalle() {
       document.getElementById("tblDetalle").innerHTML = html;
       document.getElementById("total").value = res.total_pagar.total;
     }
-  }
+  };
 }
 
-function deleteDetalle(id)
-{
+function deleteDetalle(id) {
   const url = base_url + "Compras/delete/" + id;
   const http = new XMLHttpRequest();
   http.open("GET", url, true);
@@ -1160,26 +1176,61 @@ function deleteDetalle(id)
   http.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       const res = JSON.parse(this.responseText);
-      if(res == 'ok'){
+      if (res == "ok") {
         Swal.fire({
-          position: 'top-end',
-          icon: 'success',
-          title: 'Producto eliminado',
+          position: "top-end",
+          icon: "success",
+          title: "Producto eliminado",
           showConfirmButton: false,
-          timer: 3000
-        })
+          timer: 3000,
+        });
         cargarDetalle();
-      }else{
+      } else {
         Swal.fire({
-          position: 'top-end',
-          icon: 'error',
-          title: 'Error al eliminar producto',
+          position: "top-end",
+          icon: "error",
+          title: "Error al eliminar producto",
           showConfirmButton: false,
-          timer: 3000
-        })
+          timer: 3000,
+        });
       }
     }
-  }
+  };
 }
 
 //Fin Productos
+
+function generarCompra() {
+  Swal.fire({
+    title: "Estas seguro de realizar la compra?",
+    icon: "success",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si!",
+    cancelButtonText: "No",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const url = base_url + "Compras/registrarCompra/";
+      const http = new XMLHttpRequest();
+      http.open("GET", url, true);
+      http.send();
+      http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+          const res = JSON.parse(this.responseText);
+          if (res.msg == "ok") {
+            Swal.fire("Mensaje!", "Compra generada.", "success");
+            const ruta = base_url + "Compras/generarPdf/" + res.id_compra;
+            window.open(ruta);
+            setTimeout(() => {
+              window.location.reload();
+            }, 300);
+          } else {
+            Swal.fire("Mensaje!", res, "error");
+          }
+        }
+      };
+    }
+  });
+}

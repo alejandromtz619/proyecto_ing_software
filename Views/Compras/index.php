@@ -1,8 +1,8 @@
 <?php include "Views/Templates/header.php"; ?>
 <div class="card">
-<div class= "card-header bg-primary text-white">
-<h4>Nueva Compra</h4>
-</div>
+    <div class="card-header bg-primary text-white">
+        <h4>Nueva Compra</h4>
+    </div>
     <div class="card-body">
         <form id="frmCompra">
             <div class="row">
@@ -62,7 +62,7 @@
         <div class="form-group">
             <label for="total" class="font-weight-bold">Total</label>
             <input id="total" class="form-control" type="number" name="total" placeholder="Total" disabled>
-            <button class="btn btn-primary mt-2 btn-block" type="button">Generar compra</button>
+            <button class="btn btn-primary mt-2 btn-block" type="button" onclick="generarCompra();">Generar compra</button>
         </div>
     </div>
 </div>
