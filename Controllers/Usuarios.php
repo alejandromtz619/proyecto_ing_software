@@ -5,13 +5,13 @@ class Usuarios extends Controller
     public function __construct()
     {
         session_start();
-        
+
         parent::__construct();
     }
     public function index()
     {
-        if (empty($_SESSION['activo'])){
-            header("location: ".base_url);
+        if (empty($_SESSION['activo'])) {
+            header("location: " . base_url);
         }
         $data['cajas'] = $this->model->getCajas();
         $this->views->getView($this, "index", $data);
@@ -32,7 +32,6 @@ class Usuarios extends Controller
                 <button class="btn btn-success" type="button" onclick="btnReingresarUser(' . $data[$i]['id'] . ');">Reingresar</button>
                 <div/>';
             }
-            
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
@@ -70,27 +69,27 @@ class Usuarios extends Controller
         $id = $_POST['id'];
         $hash = hash("SHA256", $clave);
         if (empty($usuario) || empty($nombre) || empty($caja)) {
-            $msg = 'Todos los campos son obligatorios';
+            $msg = array('msg' => 'Todo los campos son obligatorios', 'icono' => 'warning');
         } else {
             if ($id == "") {
                 if ($clave != $confirmar) {
-                    $msg = "Las contraseñas no coinciden";
+                    $msg = array('msg' => 'Las contrasenhas no coinciden!', 'icono' => 'warning');
                 } else {
                     $data = $this->model->registrarUsuario($usuario, $nombre, $hash, $caja);
                     if ($data == "ok") {
-                        $msg = "si";
+                        $msg = array('msg' => 'Usuario registrado con exito!', 'icono' => 'success');
                     } else if ($data = "existe") {
-                        $msg = "El usuario ya existe";
+                        $msg = array('msg' => 'El usuario ya existe', 'icono' => 'warning');
                     } else {
-                        $msg = "Error al registrar usuario";
+                        $msg = array('msg' => 'Error al registrar el usuario', 'icono' => 'warning');
                     }
                 }
             } else {
                 $data = $this->model->modificarUsuario($usuario, $nombre, $caja, $id);
                 if ($data == "modificado") {
-                    $msg = "modificado";
+                    $msg = array('msg' => 'Usuario modificado con exito!', 'icono' => 'success');
                 } else {
-                    $msg = "Error al modificar usuario";
+                    $msg = array('msg' => 'Error al modificar el usuario', 'icono' => 'warning');
                 }
             }
         }
@@ -108,9 +107,9 @@ class Usuarios extends Controller
     {
         $data = $this->model->accionUser(0, $id);
         if ($data == 1) {
-            $msg = "ok";
-        }else{
-            $msg = "Error al eliminar usuario";
+            $msg = array('msg' => 'Usuario dado de baja!', 'icono' => 'success');
+        } else {
+            $msg = array('msg' => 'Error al eliminar el usuario', 'icono' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
@@ -120,9 +119,9 @@ class Usuarios extends Controller
     {
         $data = $this->model->accionUser(1, $id);
         if ($data == 1) {
-            $msg = "ok";
-        }else{
-            $msg = "Error al reingresar usuario";
+            $msg = array('msg' => 'Usuario reingresado con exito!', 'icono' => 'success');
+        } else {
+            $msg = array('msg' => 'Error al reingresar el usuario', 'icono' => 'error');
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
@@ -131,6 +130,6 @@ class Usuarios extends Controller
     public function salir()
     {
         session_destroy();
-        header("location: ".base_url);
+        header("location: " . base_url);
     }
 }

@@ -31,18 +31,18 @@ class Compras extends Controller
             $sub_total = $precio * $cantidad;
             $data = $this->model->registrarDetalle($id_producto, $id_usuario, $precio, $cantidad, $sub_total);
             if ($data == "ok") {
-                $msg = "ok";
+                $msg = array('msg' => 'Producto ingresado a la compra', 'icono' => 'success');
             } else {
-                $msg = "error al ingresar el producto";
+                $msg = array('msg' => 'Error al ingresar el producto a la compra', 'icono' => 'error');
             }
         } else {
             $total_cantidad = $comprobante['cantidad'] + $cantidad;
             $sub_total = $total_cantidad * $precio;
             $data = $this->model->actualizarDetalle($precio, $total_cantidad, $sub_total, $id_producto, $id_usuario);
             if ($data == "modificado") {
-                $msg = "modificado";
+                $msg = array('msg' => 'Producto actualizado', 'icono' => 'success');
             } else {
-                $msg = "error al modificar el producto";
+                $msg = array('msg' => 'Error al actualizar el producto', 'icono' => 'error');
             }
         }
 
@@ -109,7 +109,7 @@ class Compras extends Controller
 
         $pdf = new FPDF('P', 'mm', array(80, 200));
         $pdf->AddPage();
-        $pdf->SetMargins(5,0,0);
+        $pdf->SetMargins(5, 0, 0);
         $pdf->SetTitle('Reporte Compra');
         $pdf->SetFont('Arial', 'B', 14);
         $pdf->Cell(65, 10, utf8_decode($empresa['nombre']), 0, 1, 'C');
@@ -135,20 +135,20 @@ class Compras extends Controller
         $pdf->Cell(20, 5, $id_compra, 0, 1, 'L');
         $pdf->Ln();
         //Encabezado de productos
-        $pdf->SetFillColor(0,0,0);
-        $pdf->SetTextColor(255,255,255);
-        $pdf->Cell(10,5, 'Cant', 0, 0, 'L', true);
-        $pdf->Cell(35,5, utf8_decode('Descripción'), 0, 0, 'L', true);
-        $pdf->Cell(10,5, 'Precio', 0, 0, 'L', true);
-        $pdf->Cell(15,5, 'Sub Total', 0, 1, 'L', true);
-        $pdf->SetTextColor(0,0,0);
+        $pdf->SetFillColor(0, 0, 0);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(10, 5, 'Cant', 0, 0, 'L', true);
+        $pdf->Cell(35, 5, utf8_decode('Descripción'), 0, 0, 'L', true);
+        $pdf->Cell(10, 5, 'Precio', 0, 0, 'L', true);
+        $pdf->Cell(15, 5, 'Sub Total', 0, 1, 'L', true);
+        $pdf->SetTextColor(0, 0, 0);
         $total = 0.00;
         foreach ($productos as $row) {
             $total = $total + $row['sub_total'];
-            $pdf->Cell(10,5, $row['cantidad'], 0, 0, 'L');
-            $pdf->Cell(35,5, utf8_decode($row['descripcion']), 0, 0, 'L');
-            $pdf->Cell(10,5, $row['precio'], 0, 0, 'L');
-            $pdf->Cell(15,5, number_format($row['sub_total'], 2, '.', ','), 0, 1, 'L');
+            $pdf->Cell(10, 5, $row['cantidad'], 0, 0, 'L');
+            $pdf->Cell(35, 5, utf8_decode($row['descripcion']), 0, 0, 'L');
+            $pdf->Cell(10, 5, $row['precio'], 0, 0, 'L');
+            $pdf->Cell(15, 5, number_format($row['sub_total'], 2, '.', ','), 0, 1, 'L');
         }
         $pdf->Ln();
         $pdf->Cell(75, 5, 'Total a pagar', 0, 1, 'R');
@@ -166,12 +166,10 @@ class Compras extends Controller
         $data = $this->model->getHistorialCompras();
         for ($i = 0; $i < count($data); $i++) {
             $data[$i]['acciones'] = '<div>
-            <a class="btn btn-danger" href= "'.base_url."Compras/generarPdf/".$data[$i]['id'].'" target="_blank"><i class="fas fa-file-pdf" ></i></button>
+            <a class="btn btn-danger" href= "' . base_url . "Compras/generarPdf/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf" ></i></button>
             <div/>';
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
-    
-
 }

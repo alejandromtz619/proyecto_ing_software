@@ -134,64 +134,66 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     ],
     language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"
+      url: "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
     },
-    dom: "<'row'<'col-sm-4'l><'col-sm-4 text-center'B><'col-sm-4'f>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-    buttons: [{
-      //Botón para Excel
-      extend: 'excelHtml5',
-      footer: true,
-      title: 'Archivo',
-      filename: 'Export_File',
-
-      //Aquí es donde generas el botón personalizado
-      text: '<span class="badge badge-success"><i class="fas fa-file-excel"></i></span>'
-    },
-      //Botón para PDF
-    {
-        extend: 'pdfHtml5',
-        download: 'open',
+    dom:
+      "<'row'<'col-sm-4'l><'col-sm-4 text-center'B><'col-sm-4'f>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+    buttons: [
+      {
+        //Botón para Excel
+        extend: "excelHtml5",
         footer: true,
-        title: 'Reporte de usuarios',
-        filename: 'Reporte de usuarios',
+        title: "Archivo",
+        filename: "Export_File",
+
+        //Aquí es donde generas el botón personalizado
+        text: '<span class="badge badge-success"><i class="fas fa-file-excel"></i></span>',
+      },
+      //Botón para PDF
+      {
+        extend: "pdfHtml5",
+        download: "open",
+        footer: true,
+        title: "Reporte de usuarios",
+        filename: "Reporte de usuarios",
         text: '<span class="badge  badge-danger"><i class="fas fa-file-pdf"></i></span>',
         exportOptions: {
-            columns: [0, ':visible']
-        }
-    },
-    //Botón para copiar
-    {
-        extend: 'copyHtml5',
+          columns: [0, ":visible"],
+        },
+      },
+      //Botón para copiar
+      {
+        extend: "copyHtml5",
         footer: true,
-        title: 'Reporte de usuarios',
-        filename: 'Reporte de usuarios',
+        title: "Reporte de usuarios",
+        filename: "Reporte de usuarios",
         text: '<span class="badge  badge-primary"><i class="fas fa-copy"></i></span>',
         exportOptions: {
-            columns: [0, ':visible']
-        }
-    },
-    //Botón para print
-    {
-        extend: 'print',
+          columns: [0, ":visible"],
+        },
+      },
+      //Botón para print
+      {
+        extend: "print",
         footer: true,
-        filename: 'Export_File_print',
-        text: '<span class="badge badge-light"><i class="fas fa-print"></i></span>'
-    },
-    //Botón para cvs
-    {
-        extend: 'csvHtml5',
+        filename: "Export_File_print",
+        text: '<span class="badge badge-light"><i class="fas fa-print"></i></span>',
+      },
+      //Botón para cvs
+      {
+        extend: "csvHtml5",
         footer: true,
-        filename: 'Export_File_csv',
-        text: '<span class="badge  badge-success"><i class="fas fa-file-csv"></i></span>'
-    },
-    {
-        extend: 'colvis',
+        filename: "Export_File_csv",
+        text: '<span class="badge  badge-success"><i class="fas fa-file-csv"></i></span>',
+      },
+      {
+        extend: "colvis",
         text: '<span class="badge  badge-info"><i class="fas fa-columns"></i></span>',
-        postfixButtons: ['colvisRestore']
-    }
-  ]
+        postfixButtons: ["colvisRestore"],
+      },
+    ],
   });
   // Fin de la tabla productos
   tblCajas = $("#tblCajas").DataTable({
@@ -232,8 +234,8 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
-      }
-    ]
+      },
+    ],
   });
 });
 
@@ -249,17 +251,9 @@ function registrarUser(e) {
   e.preventDefault();
   const usuario = document.getElementById("usuario");
   const nombre = document.getElementById("nombre");
-  const clave = document.getElementById("clave");
-  const confirmar = document.getElementById("confirmar");
   const caja = document.getElementById("caja");
   if (usuario.value == "" || nombre.value == "" || caja.value == "") {
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: "Todos los campos son obligatorios",
-      showConfirmButton: false,
-      timer: 3000,
-    });
+    alertas("Todos los campos son obligatorios", "warning");
   } else {
     const url = base_url + "Usuarios/registrar";
     const frm = document.getElementById("frmUsuario");
@@ -269,36 +263,9 @@ function registrarUser(e) {
     http.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         const res = JSON.parse(this.responseText);
-        if (res == "si") {
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Usuario registrado con éxito",
-            showConfirmButton: false,
-            timer: 3000,
-          });
-          frm.reset();
-          $("#nuevo_usuario").modal("hide");
-          tblUsuarios.ajax.reload();
-        } else if (res == "modificado") {
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Usuario modificado correctamente",
-            showConfirmButton: false,
-            timer: 3000,
-          });
-          $("#nuevo_usuario").modal("hide");
-          tblUsuarios.ajax.reload();
-        } else {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: res,
-            showConfirmButton: false,
-            timer: 3000,
-          });
-        }
+        $("#nuevo_usuario").modal("hide");
+        alertas(res.msg, res.icono);
+        tblUsuarios.ajax.reload();
       }
     };
   }
@@ -341,12 +308,8 @@ function btnEliminarUser(id) {
       http.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
-          if (res == "ok") {
-            Swal.fire("Mensaje!", "Usuario eliminado con exito.", "success");
-            tblUsuarios.ajax.reload();
-          } else {
-            Swal.fire("Mensaje!", res, "error");
-          }
+          alertas(res.msg, res.icono);
+          tblUsuarios.ajax.reload();
         }
       };
     }
@@ -370,12 +333,8 @@ function btnReingresarUser(id) {
       http.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
-          if (res == "ok") {
-            Swal.fire("Mensaje!", "Usuario reingresado con exito.", "success");
-            tblUsuarios.ajax.reload();
-          } else {
-            Swal.fire("Mensaje!", res, "error");
-          }
+          tblUsuarios.ajax.reload();
+          alertas(res.msg, res.icono);
         }
       };
     }
@@ -1148,33 +1107,32 @@ function deleteImg() {
 }
 function buscarCodigo(e) {
   e.preventDefault();
-  if (e.which == 13) {
-    const cod = document.getElementById("codigo").value;
-    const url = base_url + "Compras/buscarCodigo/" + cod;
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        const res = JSON.parse(this.responseText);
-        if (res) {
-          document.getElementById("nombre").value = res.descripcion;
-          document.getElementById("precio").value = res.precio_compra;
-          document.getElementById("id").value = res.id;
-          document.getElementById("cantidad").focus();
-        } else {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "El producto no existe",
-            showConfirmButton: false,
-            timer: 2000,
-          });
-          document.getElementById("codigo").value = "";
-          document.getElementById("codigo").focus();
+  const cod = document.getElementById("codigo").value;
+  if (cod != "") {
+    if (e.which == 13) {
+      const url = base_url + "Compras/buscarCodigo/" + cod;
+      const http = new XMLHttpRequest();
+      http.open("GET", url, true);
+      http.send();
+      http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          const res = JSON.parse(this.responseText);
+          if (res) {
+            document.getElementById("nombre").value = res.descripcion;
+            document.getElementById("precio").value = res.precio_compra;
+            document.getElementById("id").value = res.id;
+            document.getElementById("cantidad").removeAttribute("disabled");
+            document.getElementById("cantidad").focus();
+          } else {
+            alertas("El producto no existe", "warning");
+            document.getElementById("codigo").value = "";
+            document.getElementById("codigo").focus();
+          }
         }
-      }
-    };
+      };
+    }
+  } else {
+    alertas("Ingrese el codigo", "warning");
   }
 }
 function calcularPrecio(e) {
@@ -1192,34 +1150,20 @@ function calcularPrecio(e) {
       http.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           const res = JSON.parse(this.responseText);
-          if (res == "ok") {
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Producto ingresado",
-              showConfirmButton: false,
-              timer: 3000,
-            });
-            frm.reset();
-            cargarDetalle();
-          } else if (res == "modificado") {
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Producto actualizado",
-              showConfirmButton: false,
-              timer: 3000,
-            });
-            frm.reset();
-            cargarDetalle();
-          }
+          alertas(res.msg, res.icono);
+          frm.reset();
+          cargarDetalle();
+          document
+            .getElementById("cantidad")
+            .setAttribute("disabled", "disabled");
+          document.getElementById("codigo").focus();
         }
       };
     }
   }
 }
 
-if (document.getElementById('tblDetalle')){
+if (document.getElementById("tblDetalle")) {
   cargarDetalle();
 }
 
@@ -1313,13 +1257,13 @@ function generarCompra() {
             Swal.fire("Mensaje!", res, "error");
           }
         }
-      }
+      };
     }
   });
 }
 
-function modificarEmpresa(){
-  const frm = document.getElementById('frmEmpresa');
+function modificarEmpresa() {
+  const frm = document.getElementById("frmEmpresa");
   const url = base_url + "Administracion/modificar/";
   const http = new XMLHttpRequest();
   http.open("POST", url, true);
@@ -1328,10 +1272,19 @@ function modificarEmpresa(){
     if (this.readyState == 4 && this.status == 200) {
       console.log(this.responseText);
       const res = JSON.parse(this.responseText);
-      if (res == 'ok'){
-        alert('Modificado');
+      if (res == "ok") {
+        alert("Modificado");
       }
     }
-  }
+  };
+}
 
+function alertas(mensaje, icono) {
+  Swal.fire({
+    position: "top-end",
+    icon: icono,
+    title: mensaje,
+    showConfirmButton: false,
+    timer: 3000,
+  });
 }
