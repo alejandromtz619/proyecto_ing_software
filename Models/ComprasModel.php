@@ -132,4 +132,25 @@ class ComprasModel extends Query
         }
         return $res;
     }
+    public function getProCompra(int $id_compra)
+    {
+        $sql = "SELECT c.*, d.*, p.id, p.descripcion FROM compras c INNER JOIN detalle_compras d ON c.id = d.id_compra INNER JOIN productos p on p.id = d.id_producto WHERE c.id = $id_compra";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
+    public function getHistorialCompras()
+    {
+        $sql = "SELECT id, total, fecha FROM compras";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
+    public function actualizarStock(int $cantidad, int $id_pro)
+    {
+        $sql = "UPDATE productos SET cantidad = ? WHERE id =?";
+        $datos = array($cantidad, $id_pro);
+        $data = $this->save($sql, $datos);
+        return $data;
+    }
 }
