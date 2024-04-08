@@ -2,13 +2,14 @@
 
 <div class="card">
     <div class="card-header bg-dark text-white">
-        Compras
+        Ventas
     </div>
     <div class="card-body">
-        <table class="table table-light" id="t_historial_c">
+        <table class="table table-light" id="t_historial_v">
             <thead class="thead-dark">
                 <tr>
                     <th>#</th>
+                    <th>Clientes</th>
                     <th>Total</th>
                     <th>Fecha Compra</th>
                     <th></th>

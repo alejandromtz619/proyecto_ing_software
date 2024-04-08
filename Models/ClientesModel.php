@@ -9,7 +9,7 @@ class ClientesModel extends Query
     }
     public function getClientes()
     {
-        $sql = "SELECT * FROM clientes";
+        $sql = "SELECT * FROM clientes WHERE estado = 1";
         $data = $this->selectAll($sql);
         return $data;
     }

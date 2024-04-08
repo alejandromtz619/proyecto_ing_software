@@ -16,6 +16,15 @@ class Administracion extends Controller{
         $this->views->getView($this, "index", $data);
     }
 
+    public function home()
+    {
+        $data['usuarios'] = $this->model->getDatos('usuarios');
+        $data['clientes'] = $this->model->getDatos('clientes');
+        $data['productos'] = $this->model->getDatos('productos');
+        $data['ventas'] = $this->model->getVentas();
+        $this->views->getView($this, "home", $data);
+    }
+
     public function modificar()
     {
         $nombre = $_POST['nombre'];
@@ -31,6 +40,18 @@ class Administracion extends Controller{
             $msg = 'error';
         }
         echo json_encode($msg);
+        die();
+    }
+
+    public function reporteStock(){
+        $data = $this->model->getStockMinimo();
+        echo json_encode($data);
+        die();
+    }
+
+    public function productosVendidos(){
+        $data = $this->model->getproductosVendidos();
+        echo json_encode($data);
         die();
     }
 }

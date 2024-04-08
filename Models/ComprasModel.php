@@ -6,6 +6,12 @@ class ComprasModel extends Query
     {
         parent::__construct();
     }
+    public function getClientes()
+    {
+        $sql = "SELECT * FROM clientes where estado = 1";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
     function getProCod(string $cod)
     {
         $sql = "SELECT * FROM productos where codigo='$cod'";
@@ -20,10 +26,10 @@ class ComprasModel extends Query
         return $data;
     }
 
-    public function registrarDetalle(int $id_producto, int $id_usuario, string $precio, int $cantidad, string $sub_total)
+    public function registrarDetalle(string $table, int $id_producto, int $id_usuario, string $precio, int $cantidad, string $subtotal)
     {
-        $sql = "INSERT INTO detalle(id_producto, id_usuario, precio, cantidad, sub_total) VALUES (?,?,?,?,?)";
-        $datos = array($id_producto, $id_usuario, $precio, $cantidad, $sub_total);
+        $sql = "INSERT INTO $table (id_producto, id_usuario, precio, cantidad, sub_total) VALUES (?,?,?,?,?)";
+        $datos = array($id_producto, $id_usuario, $precio, $cantidad, $subtotal);
         $data = $this->save($sql, $datos);
         if ($data == 1) {
             $res = "ok";
@@ -32,23 +38,24 @@ class ComprasModel extends Query
         }
         return $res;
     }
+    
 
-    public function getDetalle(int $id)
+    public function getDetalle(string $table, int $id)
     {
-        $sql = "SELECT d.*, p.id AS id_pro, p.descripcion FROM detalle d INNER JOIN productos p ON d.id_producto = p.id WHERE d.id_usuario = $id";
+        $sql = "SELECT d.*, p.id AS id_pro, p.descripcion FROM $table d INNER JOIN productos p ON d.id_producto = p.id WHERE d.id_usuario = $id";
         $data = $this->selectAll($sql);
         return $data;
     }
-    public function calcularCompra(int $id_usuario)
+    public function calcularCompra(string $table, int $id_usuario)
     {
-        $sql = "SELECT sub_total, SUM(sub_total) AS total FROM detalle WHERE id_usuario = $id_usuario";
+        $sql = "SELECT sub_total, SUM(sub_total) AS total FROM $table WHERE id_usuario = $id_usuario";
         $data = $this->select($sql);
         return $data;
     }
 
-    public function deleteDetalle(int $id)
+    public function deleteDetalle(string $table, int $id)
     {
-        $sql = "DELETE FROM detalle WHERE id = ?";
+        $sql = "DELETE FROM $table WHERE id = ?";
         $datos = array($id);
         $data = $this->save($sql, $datos);
         if ($data == 1) {
@@ -59,17 +66,17 @@ class ComprasModel extends Query
         return $res;
     }
 
-    public function consultarDetalle(int $id_producto, int $id_usuario)
+    public function consultarDetalle(string $table, int $id_producto, int $id_usuario)
     {
-        $sql = "SELECT * FROM detalle WHERE id_producto = $id_producto AND id_usuario = $id_usuario";
+        $sql = "SELECT * FROM $table WHERE id_producto = $id_producto AND id_usuario = $id_usuario";
         $data = $this->select($sql);
         return $data;
     }
 
-    public function actualizarDetalle(string $precio, int $cantidad, string $sub_total, int $id_producto, int $id_usuario)
+    public function actualizarDetalle(string $table, string $precio, int $cantidad, string $subtotal, int $id_producto, int $id_usuario)
     {
-        $sql = "UPDATE detalle SET precio = ? , cantidad = ?, sub_total = ? WHERE id_producto = ? AND id_usuario = ? ";
-        $datos = array($precio, $cantidad,   $sub_total, $id_producto, $id_usuario);
+        $sql = "UPDATE $table SET precio = ? , cantidad = ?, sub_total = ? WHERE id_producto = ? AND id_usuario = ? ";
+        $datos = array($precio, $cantidad, $subtotal, $id_producto, $id_usuario);
         $data = $this->save($sql, $datos);
         if ($data == 1) {
             $res = "modificado";
@@ -92,17 +99,30 @@ class ComprasModel extends Query
         return $res;
     }
 
-    public function id_compra()
+    public function getId(string $table)
     {
-        $sql = "SELECT MAX(id) AS id FROM compras";
+        $sql = "SELECT MAX(id) AS id FROM $table";
         $data = $this->select($sql);
         return $data;
     }
 
-    public function registrarDetalleCompra(int $id_compra, int $id_pro, int $cantidad, string $precio, string $sub_total)
+    public function registrarDetalleCompra(int $id_compra, int $id_pro, int $cantidad, string $precio, string $subtotal)
     {
         $sql = "INSERT INTO detalle_compras (id_compra,id_producto, cantidad, precio, sub_total) VALUES (?,?,?,?,?)";
-        $datos = array($id_compra, $id_pro, $cantidad, $precio, $sub_total);
+        $datos = array($id_compra, $id_pro, $cantidad, $precio, $subtotal);
+        $data = $this->save($sql, $datos);
+        if ($data == 1) {
+            $res = "ok";
+        } else {
+            $res = "error";
+        }
+        return $res;
+    }
+
+    public function registrarDetalleVenta(int $id_venta, int $id_pro, int $cantidad, string $desc, string $precio, string $subtotal)
+    {
+        $sql = "INSERT INTO detalle_ventas (id_venta,id_producto, cantidad, descuento, precio, sub_total) VALUES (?,?,?,?,?,?)";
+        $datos = array($id_venta, $id_pro, $cantidad, $desc, $precio, $subtotal);
         $data = $this->save($sql, $datos);
         if ($data == 1) {
             $res = "ok";
@@ -120,9 +140,9 @@ class ComprasModel extends Query
         return $data;
     }
 
-    public function vaciarDetalle(int $id_usuario)
+    public function vaciarDetalle(string $table, int $id_usuario)
     {
-        $sql = "DELETE FROM detalle where id_usuario =  ?";
+        $sql = "DELETE FROM $table where id_usuario =  ?";
         $datos = array($id_usuario);
         $data = $this->save($sql, $datos);
         if ($data == 1) {
@@ -139,9 +159,23 @@ class ComprasModel extends Query
         return $data;
     }
 
+    public function getProVenta(int $id_venta)
+    {
+        $sql = "SELECT v.*, d.*, p.id, p.descripcion FROM ventas v INNER JOIN detalle_ventas d ON v.id = d.id_venta INNER JOIN productos p on p.id = d.id_producto WHERE v.id = $id_venta";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
     public function getHistorialCompras()
     {
         $sql = "SELECT id, total, fecha FROM compras";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
+    public function getHistorialVentas()
+    {
+        $sql = "SELECT c.id, c.nombre, v.* FROM clientes c INNER JOIN ventas v on v.id_cliente = c.id";
         $data = $this->selectAll($sql);
         return $data;
     }
@@ -151,6 +185,52 @@ class ComprasModel extends Query
         $sql = "UPDATE productos SET cantidad = ? WHERE id =?";
         $datos = array($cantidad, $id_pro);
         $data = $this->save($sql, $datos);
+        return $data;
+    }
+
+    public function registraVenta(int $id_cliente, string $total)
+    {
+        $sql = "INSERT INTO ventas (id_cliente, total) VALUES (?,?)";
+        $datos = array($id_cliente, $total);
+        $data = $this->save($sql, $datos);
+        if ($data == 1) {
+            $res = "ok";
+        } else {
+            $res = "error";
+        }
+        return $res;
+    }
+
+    public function clientesVenta(int $id){
+        $sql = "SELECT v.id, v.id_cliente, c.* FROM ventas v INNER JOIN clientes c ON c.id = v.id_cliente WHERE v.id = $id";
+        $data = $this->select($sql);
+        return $data;
+    }
+
+    public function verificarDescuento(int $id)
+    {
+        $sql = "SELECT * FROM detalletemp WHERE id= $id";
+        $data = $this->select($sql);
+        return $data;
+    }
+
+    public function actualizarDescuento(string $desc, string $subtotal, int $id)
+    {
+        $sql = "UPDATE detalletemp SET descuento = ?, sub_total = ? WHERE id = ?";
+        $datos = array($desc, $subtotal, $id);
+        $data = $this->save($sql, $datos);
+        if ($data == 1) {
+            $res = "ok";
+        } else {
+            $res = "error";
+        }
+        return $res;
+    }
+
+    public function getDescuento(int $id_venta)
+    {
+        $sql = "SELECT descuento, SUM(descuento) AS total FROM detalle_ventas WHERE id_venta = $id_venta";
+        $data = $this->select($sql);
         return $data;
     }
 }

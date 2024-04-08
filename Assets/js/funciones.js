@@ -1,5 +1,6 @@
 let tblUsuarios, tblClientes, tblCajas, tblCategorias, tblMedidas, tblProductos;
 document.addEventListener("DOMContentLoaded", function () {
+  $('#cliente').select2();
   tblUsuarios = $("#tblUsuarios").DataTable({
     ajax: {
       url: base_url + "Usuarios/listar",
@@ -134,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     ],
     language: {
-      url: "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
+      //url: "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json",
     },
     dom:
       "<'row'<'col-sm-4'l><'col-sm-4 text-center'B><'col-sm-4'f>>" +
@@ -192,8 +193,8 @@ document.addEventListener("DOMContentLoaded", function () {
         extend: "colvis",
         text: '<span class="badge  badge-info"><i class="fas fa-columns"></i></span>',
         postfixButtons: ["colvisRestore"],
-      },
-    ],
+      }
+    ]
   });
   // Fin de la tabla productos
   tblCajas = $("#tblCajas").DataTable({
@@ -237,8 +238,62 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     ],
   });
+  //Fin de historial compras
+  $("#t_historial_v").DataTable({
+    ajax: {
+      url: base_url + "Compras/listarhistorialventa",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "id",
+      },
+      {
+        data: "nombre",
+      },
+      {
+        data: "total",
+      },
+      {
+        data: "fecha",
+      },
+      {
+        data: "acciones",
+      }
+    ]
+  })
 });
 
+function frmCambiarPass(e){
+  e.preventDefault();
+  const actual = document.getElementById('claveactual').value;
+  const nueva = document.getElementById('clavenueva').value;
+  const confirmar = document.getElementById('confirmarclave').value;
+  if (actual == '' || nueva == '' || confirmar == ''){
+    alertas('Todos los campos son obligatorios', 'warning');
+    return false;
+  } else{
+    if (nueva != confirmar){
+      alertas('Las contraseñas no coinciden', 'warning');
+      return false;
+    }else{
+      const url = base_url + "Usuarios/cambiarPass";
+      const frm = document.getElementById("frmCambiarPass");
+      const http = new XMLHttpRequest();
+      http.open("POST", url, true);
+      http.send(new FormData(frm));
+      http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          const res = JSON.parse(this.responseText);
+          alertas(res.msg, res.icono);
+          $("#cambiarPass").modal("hide");
+          frm.reset();
+        }
+      }
+    }
+
+  }
+}
 function frmUsuario() {
   document.getElementById("title").innerHTML = "Nuevo Usuario";
   document.getElementById("btnAccion").innerHTML = "Registrar";
@@ -267,7 +322,7 @@ function registrarUser(e) {
         alertas(res.msg, res.icono);
         tblUsuarios.ajax.reload();
       }
-    };
+    }
   }
 }
 function btnEditarUser(id) {
@@ -311,7 +366,7 @@ function btnEliminarUser(id) {
           alertas(res.msg, res.icono);
           tblUsuarios.ajax.reload();
         }
-      };
+      }
     }
   });
 }
@@ -1105,10 +1160,13 @@ function deleteImg() {
   document.getElementById("imagen").value = "";
   document.getElementById("foto_actual").value = "";
 }
+
+//Fin productos
+
 function buscarCodigo(e) {
   e.preventDefault();
   const cod = document.getElementById("codigo").value;
-  if (cod != "") {
+  if (cod != '') {
     if (e.which == 13) {
       const url = base_url + "Compras/buscarCodigo/" + cod;
       const http = new XMLHttpRequest();
@@ -1135,11 +1193,41 @@ function buscarCodigo(e) {
     alertas("Ingrese el codigo", "warning");
   }
 }
+function buscarCodigoVenta(e) {
+  e.preventDefault();
+  const cod = document.getElementById("codigo").value;
+  if (cod != "") {
+    if (e.which == 13) {
+      const url = base_url + "Compras/buscarCodigo/" + cod;
+      const http = new XMLHttpRequest();
+      http.open("GET", url, true);
+      http.send();
+      http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          const res = JSON.parse(this.responseText);
+          if (res) {
+            document.getElementById("nombre").value = res.descripcion;
+            document.getElementById("precio").value = res.precio_venta;
+            document.getElementById("id").value = res.id;
+            document.getElementById("cantidad").removeAttribute("disabled");
+            document.getElementById("cantidad").focus();
+          } else {
+            alertas("El producto no existe", "warning");
+            document.getElementById("codigo").value = "";
+            document.getElementById("codigo").focus();
+          }
+        }
+      };
+    }
+  } else {
+    alertas("Ingrese el codigo", "warning");
+  }
+}
 function calcularPrecio(e) {
   e.preventDefault();
   const cant = document.getElementById("cantidad").value;
   const precio = document.getElementById("precio").value;
-  document.getElementById("sub_total").value = precio * cant;
+  document.getElementById("subtotal").value = precio * cant;
   if (e.which == 13) {
     if (cant > 0) {
       const url = base_url + "Compras/ingresar";
@@ -1153,6 +1241,31 @@ function calcularPrecio(e) {
           alertas(res.msg, res.icono);
           frm.reset();
           cargarDetalle();
+          document.getElementById("cantidad").setAttribute("disabled", "disabled");
+          document.getElementById("codigo").focus();
+        }
+      }
+    }
+  }
+}
+function calcularPrecioVenta(e) {
+  e.preventDefault();
+  const cant = document.getElementById("cantidad").value;
+  const precio = document.getElementById("precio").value;
+  document.getElementById("subtotal").value = precio * cant;
+  if (e.which == 13) {
+    if (cant > 0) {
+      const url = base_url + "Compras/ingresarVenta";
+      const frm = document.getElementById("frmVenta");
+      const http = new XMLHttpRequest();
+      http.open("POST", url, true);
+      http.send(new FormData(frm));
+      http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          const res = JSON.parse(this.responseText);
+          alertas(res.msg, res.icono);
+          frm.reset();
+          cargarDetalleVenta();
           document
             .getElementById("cantidad")
             .setAttribute("disabled", "disabled");
@@ -1167,8 +1280,12 @@ if (document.getElementById("tblDetalle")) {
   cargarDetalle();
 }
 
+if (document.getElementById("tblDetalleVenta")) {
+  cargarDetalleVenta();
+}
+
 function cargarDetalle() {
-  const url = base_url + "Compras/listar";
+  const url = base_url + "Compras/listar/detalle";
   const http = new XMLHttpRequest();
   http.open("GET", url, true);
   http.send();
@@ -1184,7 +1301,7 @@ function cargarDetalle() {
         <td>${row["precio"]}</td>
         <td>${row["sub_total"]}</td>
         <td>
-        <button class="btn btn-danger" type="button" onclick="deleteDetalle(${row["id"]})">
+        <button class="btn btn-danger" type="button" onclick="deleteDetalle(${row["id"]}, 1)">
         <i class="fas fa-trash-alt"></i></button>
         </td>
         </tr>`;
@@ -1195,14 +1312,77 @@ function cargarDetalle() {
   };
 }
 
-function deleteDetalle(id) {
-  const url = base_url + "Compras/delete/" + id;
+function cargarDetalleVenta() {
+  const url = base_url + "Compras/listar/detalletemp";
   const http = new XMLHttpRequest();
   http.open("GET", url, true);
   http.send();
   http.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       const res = JSON.parse(this.responseText);
+      let html = "";
+      res.detalle.forEach((row) => {
+        html += `<tr>
+        <td>${row["id"]}</td>
+        <td>${row["descripcion"]}</td>
+        <td>${row["cantidad"]}</td>
+        <td><input class="form-control" placeholder="Desc" type="text" onkeyup="calcularDescuento(event, ${row["id"]})"></td>
+        <td>${row["descuento"]}</td>
+        <td>${row["precio"]}</td>
+        <td>${row["sub_total"]}</td>
+        <td>
+        <button class="btn btn-danger" type="button" onclick="deleteDetalle(${row["id"]}, 2)">
+        <i class="fas fa-trash-alt"></i></button>
+        </td>
+        </tr>`;
+      });
+      document.getElementById("tblDetalleVenta").innerHTML = html;
+      document.getElementById("total").value = res.total_pagar.total;
+    }
+  };
+}
+
+function calcularDescuento(e, id) {
+  e.preventDefault();
+  if (e.target.value == ''){
+    alertas('Ingrese el descuento', 'warning');
+  } else{
+    if (e.which == 13){
+      const url= base_url + "Compras/calcularDescuento/" + id + "/" + e.target.value;
+      const http = new XMLHttpRequest();
+      http.open("GET", url, true);
+      http.send();
+      http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+          const res = JSON.parse(this.responseText);
+          cargarDetalleVenta();
+          alertas(res.msg, res.icono);
+        }
+      }
+    }
+  }
+}
+
+function deleteDetalle(id, accion) {
+  let url;
+  if (accion == 1){
+    url = base_url + "Compras/delete/" + id;
+  } else{
+    url = base_url + "Compras/deleteVenta/" + id;
+  }
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      alertas(res.msg, res.icono);
+      if (accion == 1){
+        cargarDetalle();
+      } else{
+        cargarDetalleVenta();
+      }
       if (res == "ok") {
         Swal.fire({
           position: "top-end",
@@ -1210,8 +1390,7 @@ function deleteDetalle(id) {
           title: "Producto eliminado",
           showConfirmButton: false,
           timer: 3000,
-        });
-        cargarDetalle();
+        })
       } else {
         Swal.fire({
           position: "top-end",
@@ -1219,15 +1398,16 @@ function deleteDetalle(id) {
           title: "Error al eliminar producto",
           showConfirmButton: false,
           timer: 3000,
-        });
+        })
       }
     }
-  };
+  }
 }
 
 //Fin Productos
 
-function generarCompra() {
+function procesar(accion) {
+  
   Swal.fire({
     title: "Estas seguro de realizar la compra?",
     icon: "success",
@@ -1238,26 +1418,38 @@ function generarCompra() {
     cancelButtonText: "No",
   }).then((result) => {
     if (result.isConfirmed) {
-      const url = base_url + "Compras/registrarCompra/";
+      let url;
+      if (accion == 1){
+        url = base_url + "Compras/registrarCompra/";
+      } else{
+        const id_cliente = document.getElementById('cliente').value;
+        url = base_url + "Compras/registrarVenta/"+id_cliente;
+      }
+      
       const http = new XMLHttpRequest();
       http.open("GET", url, true);
       http.send();
       http.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-          console.log(this.responseText);
           const res = JSON.parse(this.responseText);
+          
           if (res.msg == "ok") {
-            Swal.fire("Mensaje!", "Compra generada.", "success");
-            const ruta = base_url + "Compras/generarPdf/" + res.id_compra;
+            alertas(res.msg, res.icono);
+            let ruta;
+            if (accion == 1) {
+              ruta = base_url + "Compras/generarPdf/" + res.id_compra;
+            }else{
+              ruta = base_url + "Compras/generarPdfVenta/" + res.id_venta;
+            }
             window.open(ruta);
             setTimeout(() => {
               window.location.reload();
             }, 300);
           } else {
-            Swal.fire("Mensaje!", res, "error");
+            alertas(res.msg, res.icono);
           }
         }
-      };
+      }
     }
   });
 }
@@ -1270,13 +1462,12 @@ function modificarEmpresa() {
   http.send(new FormData(frm));
   http.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      console.log(this.responseText);
       const res = JSON.parse(this.responseText);
       if (res == "ok") {
         alert("Modificado");
       }
     }
-  };
+  }
 }
 
 function alertas(mensaje, icono) {
@@ -1286,5 +1477,69 @@ function alertas(mensaje, icono) {
     title: mensaje,
     showConfirmButton: false,
     timer: 3000,
-  });
+  })
 }
+
+if (document.getElementById('stockMinimo')){
+  reporteStock();
+  productosVendidos();
+}
+
+function reporteStock(){
+  const url = base_url + "Administracion/reporteStock";
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      let nombre = [];
+      let cantidad= [];
+      for (let i = 0; i < res.length; i++) {
+        nombre.push(res[i]['descripcion']);
+        cantidad.push(res[i]['cantidad']);
+      }
+      var ctx = document.getElementById("stockMinimo");
+      var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: nombre,
+          datasets: [{
+            data: cantidad,
+            backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745', '#ff8f00', '#dcff00', '#00ffcd', '#c2c0fd', '#ea55e3', '#df7070']
+          }]
+        }
+      })
+    }
+  }
+}
+
+function productosVendidos(){
+  const url = base_url + "Administracion/productosVendidos";
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      let nombre = [];
+      let cantidad= [];
+      for (let i = 0; i < res.length; i++) {
+        nombre.push(res[i]['descripcion']);
+        cantidad.push(res[i]['total']);
+      }
+      var ctx = document.getElementById("productosVendidos");
+      var myPieChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: nombre,
+          datasets: [{
+            data: cantidad,
+            backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745', '#ff8f00', '#dcff00', '#00ffcd', '#c2c0fd', '#ea55e3', '#df7070']
+          }]
+        }
+      })
+    }
+  }
+}
+

@@ -13,6 +13,20 @@ class AdministracionModel extends Query
         return $data;
     }
 
+    public function getDatos(string $table)
+    {
+        $sql = "SELECT count(*) as total FROM $table";
+        $data = $this->select($sql);
+        return $data;
+    }
+
+    public function getVentas()
+    {
+        $sql = "SELECT count(*) as total FROM ventas WHERE fecha > CURDATE()";
+        $data = $this->select($sql);
+        return $data;
+    }
+
     public function modificar(string $nombre, string $tel, string $dir, string $ruc, string $mensaje, int $id)
     {
         $sql = "UPDATE configuracion SET nombre= ?, telefono= ?, direccion=?, ruc=?, mensaje=? WHERE id=?";
@@ -26,6 +40,21 @@ class AdministracionModel extends Query
         return $res;
 
     }
+    
+    public function getStockMinimo()
+    {
+        $sql = "SELECT * FROM productos WHERE cantidad < 15 ORDER BY cantidad DESC LIMIT 10";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
+    public function getproductosVendidos()
+    {
+        $sql = "SELECT d.id_producto, d.cantidad, p.id, p.descripcion, SUM(d.cantidad) AS total FROM detalle_ventas d INNER JOIN productos p ON p.id = d.id_producto GROUP BY d.id_producto ORDER BY d.cantidad DESC LIMIT 10";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
 }
 
 ?>
