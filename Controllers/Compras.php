@@ -151,7 +151,7 @@ class Compras extends Controller
                 $msg = array('msg' => 'ok', 'id_compra' => $id_compra['id']);
             }
         } else {
-            $msg = array('msg'=> 'Error al realizar la compra', 'icono' =>'error');
+            $msg = array('msg' => 'Error al realizar la compra', 'icono' => 'error');
         }
         echo json_encode($msg);
         die();
@@ -177,12 +177,12 @@ class Compras extends Controller
                 $stock = $stock_actual['cantidad'] - $cantidad;
                 $this->model->actualizarStock($stock, $id_pro);
             }
-            $vaciar = $this->model->vaciarDetalle('detalletemp',$id_usuario);
+            $vaciar = $this->model->vaciarDetalle('detalletemp', $id_usuario);
             if ($vaciar == 'ok') {
                 $msg = array('msg' => 'ok', 'id_venta' => $id_venta['id']);
             }
         } else {
-            $msg = array('msg'=> 'Error al realizar la venta', 'icono' =>'error');
+            $msg = array('msg' => 'Error al realizar la venta', 'icono' => 'error');
         }
         echo json_encode($msg);
         die();
@@ -252,9 +252,19 @@ class Compras extends Controller
     {
         $data = $this->model->getHistorialCompras();
         for ($i = 0; $i < count($data); $i++) {
-            $data[$i]['acciones'] = '<div>
-            <a class="btn btn-danger" href= "' . base_url . "Compras/generarPdf/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf" ></i></button>
-            <div/>';
+            if ($data[$i]['estado'] == 1) {
+                $data[$i]['estado'] = '<span class="badge badge-success">Completado</span>';
+                $data[$i]['acciones'] = '<div>
+                <button class="btn btn-warning" onclick="btnAnularC(' . $data[$i]['id'] . ');"><i class="fas fa-ban"></i></button>
+                <a class="btn btn-danger" href= "' . base_url . "Compras/generarPdf/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf" ></i></button>
+                <div/>';
+            } else {
+                $data[$i]['estado'] = '<span class="badge badge-danger">Anulado</span>';
+                $data[$i]['acciones'] = '<div>
+                
+                <a class="btn btn-danger" href= "' . base_url . "Compras/generarPdf/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf" ></i></button>
+                <div/>';
+            }
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
@@ -264,9 +274,19 @@ class Compras extends Controller
     {
         $data = $this->model->getHistorialVentas();
         for ($i = 0; $i < count($data); $i++) {
-            $data[$i]['acciones'] = '<div>
-            <a class="btn btn-danger" href= "' . base_url . "Compras/generarPdfVenta/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf" ></i></button>
-            <div/>';
+            if ($data[$i]['estado'] == 1) {
+                $data[$i]['estado'] = '<span class="badge badge-success">Completado</span>';
+                $data[$i]['acciones'] = '<div>
+                <button class="btn btn-warning" onclick="btnAnularV(' . $data[$i]['id'] . ');"><i class="fas fa-ban"></i></button>
+                <a class="btn btn-danger" href= "' . base_url . "Compras/generarPdf/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf" ></i></button>
+                <div/>';
+            } else {
+                $data[$i]['estado'] = '<span class="badge badge-danger">Anulado</span>';
+                $data[$i]['acciones'] = '<div>
+                
+                <a class="btn btn-danger" href= "' . base_url . "Compras/generarPdf/" . $data[$i]['id'] . '" target="_blank"><i class="fas fa-file-pdf" ></i></button>
+                <div/>';
+            }
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
@@ -350,16 +370,16 @@ class Compras extends Controller
         $array = explode(",", $datos);
         $id = $array[0];
         $desc = $array[1];
-        if (empty($id || empty($desc))){
+        if (empty($id || empty($desc))) {
             $msg = array('msg' => 'Error', 'icono' => 'error');
-        }else{
+        } else {
             $descuento_actual = $this->model->verificarDescuento($id);
             $descuento_total = $descuento_actual['descuento'] + $desc;
-            $subtotal = ($descuento_actual['cantidad']*$descuento_actual['precio']) - $descuento_total;
+            $subtotal = ($descuento_actual['cantidad'] * $descuento_actual['precio']) - $descuento_total;
             $data = $this->model->actualizarDescuento($descuento_total, $subtotal, $id);
-            if ($data == 'ok'){
+            if ($data == 'ok') {
                 $msg = array('msg' => 'Descuento aplicado', 'icono' => 'success');
-            }else{
+            } else {
                 $msg = array('msg' => 'Error al aplicar descuento', 'icono' => 'error');
             }
         }
@@ -367,4 +387,41 @@ class Compras extends Controller
         die();
     }
 
+    public function anularCompra($idcompra)
+    {
+        $data = $this->model->getAnularCompra($idcompra);
+        $anular = $this->model->getAnularC($idcompra);
+        foreach ($data as $row) {
+            $stockactual = $this->model->getProductos($row['id_producto']);
+            $stock = $stockactual['cantidad'] - $row['cantidad'];
+            $this->model->actualizarStock($stock, $row['id_producto']);
+        }
+
+        if ($anular == 'ok') {
+            $msg = array('msg' => 'Compra Anulada', 'icon' => 'success');
+        } else {
+            $msg = array('msg' => 'Error al anular', 'icon' => 'error');
+        }
+        echo json_encode($msg);
+        die();
+    }
+
+    public function anularVenta($idventa)
+    {
+        $data = $this->model->getAnularVenta($idventa);
+        $anular = $this->model->getAnularV($idventa);
+        foreach ($data as $row) {
+            $stockactual = $this->model->getProductos($row['id_producto']);
+            $stock = $stockactual['cantidad'] + $row['cantidad'];
+            $this->model->actualizarStock($stock, $row['id_producto']);
+        }
+
+        if ($anular == 'ok') {
+            $msg = array('msg' => 'Venta Anulada', 'icon' => 'success');
+        } else {
+            $msg = array('msg' => 'Error al anular', 'icon' => 'error');
+        }
+        echo json_encode($msg);
+        die();
+    }
 }

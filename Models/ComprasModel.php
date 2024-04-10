@@ -2,6 +2,7 @@
 
 class ComprasModel extends Query
 {
+
     public function __construct()
     {
         parent::__construct();
@@ -38,7 +39,7 @@ class ComprasModel extends Query
         }
         return $res;
     }
-    
+
 
     public function getDetalle(string $table, int $id)
     {
@@ -168,7 +169,7 @@ class ComprasModel extends Query
 
     public function getHistorialCompras()
     {
-        $sql = "SELECT id, total, fecha FROM compras";
+        $sql = "SELECT id, total, fecha, estado FROM compras";
         $data = $this->selectAll($sql);
         return $data;
     }
@@ -201,7 +202,8 @@ class ComprasModel extends Query
         return $res;
     }
 
-    public function clientesVenta(int $id){
+    public function clientesVenta(int $id)
+    {
         $sql = "SELECT v.id, v.id_cliente, c.* FROM ventas v INNER JOIN clientes c ON c.id = v.id_cliente WHERE v.id = $id";
         $data = $this->select($sql);
         return $data;
@@ -232,5 +234,45 @@ class ComprasModel extends Query
         $sql = "SELECT descuento, SUM(descuento) AS total FROM detalle_ventas WHERE id_venta = $id_venta";
         $data = $this->select($sql);
         return $data;
+    }
+
+    public function getAnularCompra(int $idcompra)
+    {
+        $sql = "SELECT c.*, d.* FROM compras c INNER JOIN detalle_compras d ON c.id = d.id_compra  WHERE c.id = $idcompra";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
+    public function getAnularVenta(int $idventa)
+    {
+        $sql = "SELECT v.*, d.* FROM ventas v INNER JOIN detalle_ventas d ON v.id = d.id_venta  WHERE v.id = $idventa";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+
+    public function getAnularC(int $idcompra)
+    {
+        $sql = "UPDATE compras SET estado = ? WHERE id = ?";
+        $datos = array(0, $idcompra);
+        $data = $this->save($sql, $datos);
+        if ($data == 1) {
+            $res = "ok";
+        } else {
+            $res = "error";
+        }
+        return $res;
+    }
+
+    public function getAnularV(int $idventa)
+    {
+        $sql = "UPDATE ventas SET estado = ? WHERE id = ?";
+        $datos = array(0, $idventa);
+        $data = $this->save($sql, $datos);
+        if ($data == 1) {
+            $res = "ok";
+        } else {
+            $res = "error";
+        }
+        return $res;
     }
 }
