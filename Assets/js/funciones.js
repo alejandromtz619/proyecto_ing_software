@@ -5,7 +5,8 @@ let tblUsuarios,
   tblMedidas,
   tblProductos,
   t_h_c,
-  t_h_v;
+  t_h_v,
+  tblArqueo;
 document.addEventListener("DOMContentLoaded", function () {
   $("#cliente").select2();
   tblUsuarios = $("#tblUsuarios").DataTable({
@@ -272,6 +273,39 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       {
         data: "acciones",
+      },
+    ],
+  });
+
+  tblArqueo = $("#tblArqueo").DataTable({
+    ajax: {
+      url: base_url + "Cajas/listarArqueo",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "id",
+      },
+      {
+        data: "monto_inicial",
+      },
+      {
+        data: "monto_final",
+      },
+      {
+        data: "fecha_apertura",
+      },
+      {
+        data: "fecha_cierre",
+      },
+      {
+        data: "total_ventas",
+      },
+      {
+        data: "monto_total",
+      },
+      {
+        data: "estado",
       },
     ],
   });
@@ -1635,4 +1669,44 @@ function btnAnularV(id) {
       };
     }
   });
+}
+
+function arqueoCaja() {
+  $("#abrir_caja").modal("show");
+}
+
+function abrirArqueo(e) {
+  e.preventDefault();
+  const monto_inicial = document.getElementById("monto_inicial").value;
+  if (monto_inicial == "") {
+    alertas("Ingrese el monto inicial", "warning");
+  } else {
+    const frm = document.getElementById("frmAbrirCaja");
+    const url = base_url + "Cajas/abrirArqueo";
+    const http = new XMLHttpRequest();
+    http.open("POST", url, true);
+    http.send(new FormData(frm));
+    http.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        const res = JSON.parse(this.responseText);
+        alertas(res.msg, res.icono);
+        $("#abrir_caja").modal("hide");
+      }
+    };
+  }
+}
+
+function cerrarCaja() {
+  const url = base_url + "Cajas/getVentas";
+  const http = new XMLHttpRequest();
+  http.open("GET", url, true);
+  http.send();
+  http.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      const res = JSON.parse(this.responseText);
+      document.getElementById("monto_final").value = res.monto_total.total;
+      document.getElementById("total_ventas").value = res.total_ventas.total;
+      $("#abrir_caja").modal("show");
+    }
+  };
 }

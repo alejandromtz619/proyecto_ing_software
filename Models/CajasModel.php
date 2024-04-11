@@ -7,9 +7,9 @@ class CajasModel extends Query
     {
         parent::__construct();
     }
-    public function getCajas()
+    public function getCajas(string $table)
     {
-        $sql = "SELECT * FROM caja";
+        $sql = "SELECT * FROM $table";
         $data = $this->selectAll($sql);
         return $data;
     }
@@ -18,7 +18,7 @@ class CajasModel extends Query
         $this->caja = $caja;
         $verificar = "SELECT * FROM caja WHERE caja = '$this->caja'";
         $existe = $this->select($verificar);
-        if (empty($existe)){
+        if (empty($existe)) {
             $sql = "INSERT INTO caja(caja) VALUES (?)";
             $datos = array($this->caja);
             $data = $this->save($sql, $datos);
@@ -31,7 +31,6 @@ class CajasModel extends Query
             $res = "existe";
         }
         return $res;
-        
     }
 
     public function modificarCaja(string $caja, int $id)
@@ -47,7 +46,6 @@ class CajasModel extends Query
             $res = "error";
         }
         return $res;
-        
     }
 
     public function editarCaja(int $id)
@@ -59,13 +57,45 @@ class CajasModel extends Query
 
     public function accionCaja(int $estado, int $id)
     {
-        $this->id=$id;
+        $this->id = $id;
         $this->estado = $estado;
         $sql = "UPDATE caja SET estado = ? WHERE id = ?";
         $datos = array($this->estado, $this->id);
         $data = $this->save($sql, $datos);
         return $data;
     }
-}
 
-?>
+    public function registrarArqueo(int $id_usuario, string $monto_inicial, string $fecha_apertura)
+    {
+
+        $verificar = "SELECT * FROM cierre_caja WHERE id_usuario = '$id_usuario' AND estado=1";
+        $existe = $this->select($verificar);
+        if (empty($existe)) {
+            $sql = "INSERT INTO cierre_caja (id_usuario, monto_inicial, fecha_apertura) VALUES (?,?,?)";
+            $datos = array($id_usuario, $monto_inicial, $fecha_apertura);
+            $data = $this->save($sql, $datos);
+            if ($data == 1) {
+                $res = "ok";
+            } else {
+                $res = "error";
+            }
+        } else {
+            $res = "existe";
+        }
+        return $res;
+    }
+
+    public function getVentas(int $id_user)
+    {
+        $sql = "SELECT total, SUM(total) AS total FROM ventas WHERE id_usuario = $id_user AND estado = 1 AND apertura = 1";
+        $data = $this->select($sql);
+        return $data;
+    }
+
+    public function getTotalVentas(int $id_user)
+    {
+        $sql = "SELECT COUNT(total) as total  FROM ventas WHERE id_usuario = $id_user AND estado = 1 AND apertura=1";
+        $data = $this->select($sql);
+        return $data;
+    }
+}

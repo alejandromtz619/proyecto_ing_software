@@ -189,10 +189,10 @@ class ComprasModel extends Query
         return $data;
     }
 
-    public function registraVenta(int $id_cliente, string $total)
+    public function registraVenta(int $id_user, int $id_cliente, string $total)
     {
-        $sql = "INSERT INTO ventas (id_cliente, total) VALUES (?,?)";
-        $datos = array($id_cliente, $total);
+        $sql = "INSERT INTO ventas (id_usuario,id_cliente, total) VALUES (?,?,?)";
+        $datos = array($id_user, $id_cliente, $total);
         $data = $this->save($sql, $datos);
         if ($data == 1) {
             $res = "ok";

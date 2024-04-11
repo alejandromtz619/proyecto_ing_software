@@ -159,9 +159,10 @@ class Compras extends Controller
 
     public function registrarVenta($id_cliente)
     {
+
         $id_usuario = $_SESSION['id_usuario'];
         $total = $this->model->calcularCompra('detalletemp', $id_usuario);
-        $data = $this->model->registraVenta($id_cliente, $total['total']);
+        $data = $this->model->registraVenta($id_usuario, $id_cliente, $total['total']);
         if ($data == 'ok') {
             $detalle = $this->model->getDetalle('detalletemp', $id_usuario);
             $id_venta = $this->model->getId('ventas');

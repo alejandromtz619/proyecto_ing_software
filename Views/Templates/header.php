@@ -10,7 +10,7 @@
     <title>Panel de administración</title>
     <link href="<?php echo base_url; ?>Assets/css/styles.css" rel="stylesheet" />
     <link href="<?php echo base_url; ?>Assets/DataTables/datatables.min.css" rel="stylesheet" crossorigin="anonymous" />
-    <link href="<?php echo base_url; ?>Assets/css/select2.min.css" rel="stylesheet"/>
+    <link href="<?php echo base_url; ?>Assets/css/select2.min.css" rel="stylesheet" />
     <script src="<?php echo base_url; ?>Assets/js/all.min.js" crossorigin="anonymous"></script>
 </head>
 
@@ -44,8 +44,18 @@
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="<?php echo base_url; ?>Usuarios"><i class="fas fa-user mr-2 fa-2x"></i>Usuarios</a>
-                                <a class="nav-link" href="<?php echo base_url; ?>Cajas"><i class="fas fa-cash-register mr-2 fa-2x"></i>Cajas</a>
                                 <a class="nav-link" href="<?php echo base_url; ?>Administracion"><i class="fas fa-tools mr-2 fa-2x"></i>Configuración</a>
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCaja" aria-expanded="false" aria-controls="collapseCaja">
+                            <div class="sb-nav-link-icon"><i class="fas fa-box fa-2x" color="white"></i></div>
+                            Cajas
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseCaja" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="<?php echo base_url; ?>Cajas"><i class="fas fa-cash-register mr-2 fa-2x"></i>Cajas</a>
+                                <a class="nav-link" href="<?php echo base_url; ?>Cajas/arqueo"><i class="fas fa-tools mr-2 fa-2x"></i>Arqueo Caja</a>
                             </nav>
                         </div>
                         <a class="nav-link" href="<?php echo base_url; ?>Clientes">
